@@ -1,0 +1,68 @@
+@import "./settings";
+@import "./components/animate";
+@import "./components/header";
+@import "./components/footer";
+@import "./pages/home";
+@import "./pages/profil";
+@import "./components/job";
+@import "./components/auth";
+@import "./components/candidates";
+
+.blog-box {
+  background-color: transparent;
+  border: none;
+  -webkit-box-shadow: 0 3px 10px 0 rgba(49, 64, 71, .08);
+  box-shadow: 0 3px 10px 0 rgba(49, 64, 71, .08);
+  border-radius: 6px;
+
+  .blog-img {
+    border-radius: 6px 6px 0 0;
+
+    .bg-overlay {
+      opacity: 0;
+      -webkit-transition: all .5s ease;
+      transition: all .5s ease;
+    }
+
+    .author {
+      -webkit-transition: all .5s ease;
+      transition: all .5s ease;
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      opacity: 0;
+    }
+
+    .likes {
+      -webkit-transition: all .5s ease;
+      transition: all .5s ease;
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+      opacity: 0;
+    }
+  }
+
+  .bg-overlay {
+    background-color: rgba(49, 64, 71, .5);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+  }
+}
+
+.blog-box:hover .blog-img {
+  .bg-overlay {
+    opacity: .6;
+  }
+
+  .author {
+    opacity: 1;
+  }
+
+  .likes {
+    opacity: 1;
+  }
+}
