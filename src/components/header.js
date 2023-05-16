@@ -172,7 +172,7 @@ const Header = () => {
           <div class="off-canvas-inner">
             <div class="logo">
               <a href="/">
-                <img src="./img/logost0.png" alt="Logo" />
+                <img src="./img/ich1.svg" alt="Logo" />
               </a>
             </div>
             <div class="mobile-navigation">
@@ -184,23 +184,18 @@ const Header = () => {
                     </NavLink>
                   </li>
                   <li>
-                    <NavLink exact to="/academy">
-                      Académie
+                    <NavLink exact to="/jobs">
+                      Emplois
+                    </NavLink>
+                  </li>
+                  <li >
+                    <NavLink exact to="/candidates">
+                      Candidatures
                     </NavLink>
                   </li>
                   <li>
-                    <NavLink exact to="/communitys">
-                      Communautés
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink exact to="/services">
-                      Services
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink exact to="/profil">
-                      Profil
+                    <NavLink exact to="/about">
+                      A propos
                     </NavLink>
                   </li>
                 </ul>
@@ -245,7 +240,7 @@ const Header = () => {
           </div>
         </div>
       </aside>
-    </header>
+    </header >
   );
 }
 

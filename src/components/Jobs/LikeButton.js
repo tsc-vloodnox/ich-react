@@ -24,11 +24,11 @@ const LikeButton = ({ id, likes }) => {
 
 
     return (
-        <div className="like-container">
+        <div className="like-job">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="44"
-                height="44"
+                width="30"
+                height="30"
                 viewBox="0 0 24 24"
                 strokeWidth="1.5"
                 stroke="#2c3e50"

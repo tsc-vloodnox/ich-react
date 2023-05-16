@@ -93,7 +93,7 @@ export const slideStetting2 = {
 }
 
 export const breakpoints = {
-  default: 5,
+  default: 4,
   1100: 3,
   700: 2,
 };

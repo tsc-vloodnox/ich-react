@@ -16,6 +16,7 @@ import JobDetails from "./components/Jobs/JobDetails";
 import NewJob from "./components/Jobs/NewJob";
 import Login from "./components/authentication/Login";
 import CandidateDetails from "./components/Candidate/CandidateDetails";
+import NoFound from "./pages/NoFound";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
+            <Route path="*" element={<NoFound />} />
           </Routes>
         </AuthProvider>
         <Footer />

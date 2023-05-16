@@ -9,48 +9,25 @@ import {
 } from "../components/constant/allTools";
 import JobCard from "../components/Jobs/JobCard";
 import { useAuth } from "../contexts/AuthContext"
-import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 
 const Home = () => {
   const { currentUser } = useAuth();
 
-  // const [selectedCategory, setSelectedCategory] = useState("");
   const [jobs, setJobs] = useState([]);
-
   useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        let jobsCollectionRef = collection(db, "Jobs");
-
-        // if (selectedCategory) {
-        //   jobsCollectionRef = query(
-        //     jobsCollectionRef,
-        //     where("type", "==", selectedCategory)
-        //   );
-        // }
-
-        jobsCollectionRef = orderBy(jobsCollectionRef, "createdAt", "desc");
-
-        const querySnapshot = await getDocs(jobsCollectionRef);
-
-        const jobsData = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        setJobs(jobsData);
-      } catch (error) {
-        console.error("Error fetching jobs: ", error);
-      }
-    };
-
-    fetchJobs();
+    const jobRef = collection(db, "Jobs");
+    const q = query(jobRef, orderBy("createdAt", "desc"));
+    onSnapshot(q, (snapshot) => {
+      const jobs = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setJobs(jobs);
+    });
   }, []);
 
-  // const handleCategoryChange = (category) => {
-  //   setSelectedCategory(category);
-  // };
 
   return (
     <div className="home">
@@ -444,53 +421,12 @@ const Home = () => {
               </div>
             </div>
           </div>
-          {/* <div class="row justify-content-center">
-            <div class="col-lg-10">
-              <ul className="job-list-menu nav nav-pills nav-justified flex-column flex-sm-row mb-4">
-                <li class="nav-item">
-                  <button
-                    class="nav-link"
-                    onClick={() => handleCategoryChange("")}
-                  >Toutes les offres
-                  </button>
-                </li>
-                <li class="nav-item">
-                  <button
-                    class="nav-link"
-                    onClick={() => handleCategoryChange("Nouveaux")}
-                  >Nouveaux
-                  </button>
-                </li>
-                <li class="nav-item">
-                  <button
-                    class="nav-link"
-                    onClick={() => handleCategoryChange("En vedette")}
-                  >En vedette
-                  </button>
-                </li>
-                <li class="nav-item">
-                  <button
-                    class="nav-link"
-                    onClick={() => handleCategoryChange("Temps partiel")}
-                  >Temps partiel
-                  </button>
-                </li>
-                <li class="nav-item">
-                  <button
-                    class="nav-link"
-                    onClick={() => handleCategoryChange("Temps plein")}
-                  >Temps plein
-                  </button>
-                </li>
-              </ul>
-            </div>
-
-          </div> */}
 
           <div class="row">
             {jobs.length > 0 &&
               jobs
                 .sort((a, b) => b.date - a.date)
+                .slice(0, 4)
                 .map((job) => (
                   <JobCard job={job} key={job.id} user={currentUser} />
                 ))}

@@ -198,15 +198,6 @@
     }
 }
 
-.job-Categories-box .job-Categories-list li {
-    background-color: #fff;
-    padding: 8px 14px;
-    border-radius: 4px;
-    margin-bottom: 14px;
-    -webkit-box-shadow: 0 0.75rem 1.5rem rgba(49, 64, 71, .03);
-    box-shadow: 0 0.75rem 1.5rem rgba(49, 64, 71, .03);
-}
-
 .job-list-menu {
     background-color: #fff;
     -webkit-box-shadow: 0 3px 10px 0 rgba(49, 64, 71, .08);
@@ -238,7 +229,40 @@
 .job-box {
     overflow: hidden;
     -webkit-transition: all .5s ease;
-    transition: all .5s ease
+    transition: all .5s ease;
+
+    .footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        padding: 12px 0 4px;
+
+        svg {
+            cursor: pointer;
+            transition: 0.2s;
+
+            &:hover {
+                transform: scale(1.2);
+            }
+        }
+
+        .like-job {
+            display: flex;
+            align-items: center;
+            position: relative;
+
+            .liked {
+                stroke: #FF7B77;
+                fill: #FF7B77;
+            }
+
+            span {
+                font-size: 1.02rem;
+                position: absolute;
+                transform: translate(29px, 2px);
+            }
+        }
+    }
 }
 
 .job-box .bookmark-label {
@@ -507,4 +531,24 @@
     height: 44px;
     padding: 6px 6px 6px 45px;
     border-radius: 6px;
+}
+
+.job-Categories-list {
+    display: flex;
+    flex-wrap: wrap;
+
+    li {
+        max-width: 250px;
+        ;
+        background-color: #fff;
+        padding: 8px 14px;
+        border-radius: 4px;
+        margin: 5px;
+        -webkit-box-shadow: 0 0.75rem 1.5rem rgba(49, 64, 71, .03);
+        box-shadow: 0 0.75rem 1.5rem rgba(49, 64, 71, .03);
+    }
+
+    span {
+        margin-left: 3px;
+    }
 }

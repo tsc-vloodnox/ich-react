@@ -46,7 +46,7 @@ export default function Signup() {
 
   return (
     <div className="page-wrapper signup">
-      <div class="page-title-area">
+      <div class="page-title">
         <div class="d-table">
           <div class="d-table-cell">
             <div class="container">

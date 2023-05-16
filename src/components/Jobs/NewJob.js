@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { Timestamp, collection, addDoc } from "firebase/firestore";
+import { Timestamp, collection, addDoc, updateDoc, increment, query, onSnapshot } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage, db, } from "../../firebaseConfig";
 import { toast } from "react-toastify";
@@ -8,18 +8,32 @@ import { toast } from "react-toastify";
 
 const NewJob = () => {
   const { currentUser } = useAuth();
+
+  const [categorys, setCategorys] = useState([]);
+  useEffect(() => {
+    const categoryRef = collection(db, "Category");
+    const q = query(categoryRef);
+    onSnapshot(q, (snapshot) => {
+      const categorys = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setCategorys(categorys);
+    });
+  }, []);
+
   const [jobData, setJobData] = useState({
-    title: "",
-    category: "",
+    jobName: "",
+    categoryId: "",
     company: "",
     salary: "",
     vacancies: "",
     location: "",
-    type: "",
+    jobType: "",
     description: "",
     tags: "",
     experience: "",
-    image: "",
+    jobPic: "",
     createdAt: Timestamp.now().toDate(),
   });
 
@@ -28,125 +42,109 @@ const NewJob = () => {
   const handleChange = (e) => {
     setJobData({ ...jobData, [e.target.name]: e.target.value });
   };
+  const handleCategoryChange = (e) => {
+    setJobData({ ...jobData, categoryId: e.target.value }); // Mise à jour de la propriété categoryId
+  };
   const handleImageChange = (e) => {
-    setJobData({ ...jobData, image: e.target.files[0] });
+    setJobData({ ...jobData, jobPic: e.target.files[0] });
   };
 
-  const handlePublish = () => {
-    if (!jobData.title) {
-      alert("Veuillez remplir le formulaire");
+  const handlePublish = async () => {
+    if (!jobData.jobName) {
+      alert("Veuillez entrer un message");
       return;
     }
-    if (jobData.title && !jobData.image) {
+
+    try {
       const jobRef = collection(db, "Jobs");
-      addDoc(jobRef, {
-        title: jobData.title,
-        category: jobData.category,
+      const categoryRef = collection(db, "Categories").doc(jobData.categoryId);
+      let jobPicUrl = null;
+
+      if (jobData.jobPic) {
+        // Téléchargement de l'image et récupération de l'URL
+        const storageRef = ref(storage, `/images/${Date.now()}${jobData.jobPic.name}`);
+        const uploadImage = uploadBytesResumable(storageRef, jobData.jobPic);
+
+        uploadImage.on(
+          "state_changed",
+          (snapshot) => {
+            const progressPercent = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+            setProgress(progressPercent);
+          },
+          (err) => {
+            console.log(err);
+          }
+        );
+
+        await uploadImage;
+        jobPicUrl = await getDownloadURL(uploadImage.snapshot.ref);
+      }
+
+      // Ajout du document du nouvel emploi dans la collection "Jobs"
+      await addDoc(jobRef, {
+        jobName: jobData.jobName,
+        categoryId: jobData.categoryId,
         company: jobData.company,
         salary: jobData.salary,
         vacancies: jobData.vacancies,
         location: jobData.location,
-        type: jobData.type,
+        jobType: jobData.jobType,
         description: jobData.description,
         tags: jobData.tags,
         experience: jobData.experience,
-        imageUrl: null,
+        jobPic: jobPicUrl,
         createdAt: Timestamp.now().toDate(),
         createdBy: currentUser.displayName,
         posterPic: currentUser.photoURL,
         userId: currentUser.uid,
         likes: [],
-      })
-        .then(() => {
-          toast("Job added successfully", { type: "success" });
-          setProgress(0);
-          setJobData({
-            title: "",
-            category: "",
-            company: "",
-            salary: "",
-            vacancies: "",
-            location: "",
-            type: "",
-            description: "",
-            tags: "",
-            experience: "",
-            image: "",
-          });
-        })
-        .catch((err) => {
-          toast("Error adding job", { type: "error" }, err);
-        });
-    }
+      });
 
-    if (jobData.title && jobData.image) {
-      const storageRef = ref(
-        storage,
-        `/images/${Date.now()}${jobData.image.name}`
-      );
-      const uploadImage = uploadBytesResumable(storageRef, jobData.image);
-      uploadImage.on(
-        "state_changed",
-        (snapshot) => {
-          const progressPercent = Math.round(
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          );
-          setProgress(progressPercent);
-        },
-        (err) => {
-          console.log(err);
-        },
-        () => {
-          setJobData({
-            title: "",
-            category: "",
-            company: "",
-            salary: "",
-            vacancies: "",
-            location: "",
-            type: "",
-            description: "",
-            tags: "",
-            experience: "",
-            image: "",
-          });
+      // Incrémentation du jobCount de la catégorie correspondante
+      await updateDoc(categoryRef, {
+        jobCount: increment(1)
+      });
 
-          getDownloadURL(uploadImage.snapshot.ref).then((url) => {
-            const jobRef = collection(db, "Jobs");
-            addDoc(jobRef, {
-              title: jobData.title,
-              category: jobData.category,
-              company: jobData.company,
-              salary: jobData.salary,
-              vacancies: jobData.vacancies,
-              location: jobData.location,
-              type: jobData.type,
-              description: jobData.description,
-              tags: jobData.tags,
-              experience: jobData.experience,
-              imageUrl: url,
-              createdAt: Timestamp.now().toDate(),
-              createdBy: currentUser.displayName,
-              posterPic: currentUser.photoURL,
-              userId: currentUser.uid,
-              likes: [],
-            })
-              .then(() => {
-                toast("Job added successfully", { type: "success" });
-                setProgress(0);
-              })
-              .catch((err) => {
-                toast("Error adding job", { type: "error" }, err);
-              });
-          });
-        }
-      );
+      toast("Job added successfully", { type: "success" });
+      setProgress(0);
+      setJobData({
+        jobName: "",
+        categoryId: "",
+        company: "",
+        salary: "",
+        vacancies: "",
+        location: "",
+        jobType: "",
+        description: "",
+        tags: "",
+        experience: "",
+        jobPic: "",
+      });
+    } catch (error) {
+      toast("Error adding job", { type: "error" });
+      console.log(error);
     }
+  };
+
+  const cancelPost = () => {
+    setJobData({
+      jobName: "",
+      categoryId: "",
+      company: "",
+      salary: "",
+      vacancies: "",
+      location: "",
+      jobType: "",
+      description: "",
+      tags: "",
+      experience: "",
+      jobPic: "",
+    });
   };
 
   return (
     <div className='page-wrapper'>
-      <div class="page-title-area">
+      <div class="page-title">
         <div class="d-table">
           <div class="d-table-cell">
             <div class="container">
@@ -177,7 +175,7 @@ const NewJob = () => {
                     <input
                       type="file"
                       class="form-control"
-                      name="image"
+                      name="jobPic"
                       onChange={(e) => handleImageChange(e)}
                     />
                   </div>
@@ -189,25 +187,28 @@ const NewJob = () => {
                       type="text"
                       placeholder="UX/UI Designer"
                       class="form-control"
-                      value={jobData.title}
-                      name="title"
+                      value={jobData.jobName}
+                      name="jobName"
                       onChange={(e) => handleChange(e)}
                     />
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label >Catégorie d'emploi</label>
-                    <div class="job-category-area">
-                      <input
-                        className='form-control'
-                        type="text"
-                        name="category"
-                        placeholder="Sante, immobilier...."
-                        value={jobData.category}
-                        onChange={(e) => handleChange(e)}
-                      />
-                    </div>
+                    <label>Categories</label>
+                    <select
+                      className="form-control form-select"
+                      name="categoryId"
+                      value={jobData.categoryId}
+                      onChange={handleCategoryChange}
+                    >
+                      <option value="">Choisir la Catégorie</option>
+                      {categorys.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
                 <div class="col-lg-6">
@@ -271,8 +272,8 @@ const NewJob = () => {
                       type="text"
                       className="form-control"
                       placeholder="temps plein, temps partiel, stagiere,...."
-                      value={jobData.type}
-                      name="type"
+                      value={jobData.jobType}
+                      name="jobType"
                       onChange={(e) => handleChange(e)}
                     />
                   </div>
@@ -319,6 +320,9 @@ const NewJob = () => {
               </div>
               <div class="text-left">
                 <button type="submit" class="btn create-ac-btn" onClick={handlePublish}>Envoyer</button>
+                <button className="btn create-ac-btn" onClick={cancelPost}>
+                  Annuler message
+                </button>
               </div>
             </div>
             {progress === 0 ? null : (

@@ -60,7 +60,7 @@ const Profile = () => {
 
     return (
         <div className='page-wrapper profile'>
-            <div class="page-title-area">
+            <div class="page-title">
                 <div class="d-table">
                     <div class="d-table-cell">
                         <div class="container">

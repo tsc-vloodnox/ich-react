@@ -15,16 +15,16 @@ const JobCard = ({ job }) => {
                         <div class="col-md-2">
                             <div class="text-center mb-4 mb-md-0">
                                 <a href="company-details.html">
-                                    <img src={job.imageUrl} alt="Job-pic" class="img-fluid rounded-3" />
+                                    <img src={job.jobPic} alt="Job-pic" class="img-fluid rounded-3" />
                                 </a>
                             </div>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-5">
                             <div class="mb-2 mb-md-0">
                                 <h5 class="fs-18 mb-1">
                                     <a href="jobs/job-details" class="text-dark">
-                                        {job.title}
+                                        {job.jobName}
                                     </a>
                                 </h5>
                                 <p class="text-muted fs-14 mb-0">{job.company}</p>
@@ -48,28 +48,18 @@ const JobCard = ({ job }) => {
                                 </p>
                             </div>
                         </div>
-
-                        <div class="col-md-2">
-                            <div>
-                                <span class="badge bg-soft-info fs-13 mt-1">{job.tags}</span>
-                            </div>
-                        </div>
+                    </div>
+                    <div className="d-flex align-items-center justify-content-around">
+                        <span class="badge bg-soft-info fs-13 mt-1">{job.jobType}</span>
+                        <span class="badge bg-soft-info fs-13 mt-1">{job.tags}</span>
 
                     </div>
 
                 </div>
                 <div class="p-3 bg-light">
                     <div class="row">
-                        <div class="col-md-4">
-                            <div>
-                                <p class="text-muted mb-0">
-                                    <span class="text-dark">Experience :</span>
-                                    {job.experiance}
-                                </p>
-                            </div>
-                        </div>
 
-                        <div class="col-lg-6 col-md-5">
+                        <div class="col-lg-8 col-md-5">
                             <div>
                                 <p class="text-muted mb-0">
                                     <span class="text-dark">Notes :</span>
@@ -78,23 +68,34 @@ const JobCard = ({ job }) => {
                             </div>
                         </div>
 
-                        <div class="col-lg-2 col-md-3">
-                            <div class="text-start text-md-end">
-                                <a href="#applyNow" class="btn border primary-link">
-                                    Apply Now
-                                    <i class="mdi mdi-chevron-double-right"></i>
-                                </a>
-                                {job.userId === currentUser?.uid && (
-                                    <div className="button-container">
-                                        <DeleteJob id={job.id} imageUrl={job.imageUrl} />
-                                    </div>
-                                )}
-                                <LikeButton id={job.id} likes={job.likes} />
-
+                        <div class="col-md-4">
+                            <div>
+                                <p class="text-muted mb-0">
+                                    <span class="text-dark">Experience :</span>
+                                    {job.experiance}
+                                </p>
                             </div>
                         </div>
-
                     </div>
+
+                </div>
+                <div className="footer bg-light">
+                    {job.userId === currentUser?.uid && (
+                        <DeleteJob id={job.id} jobPic={job.jobPic} />
+                    )}
+                    {
+                        currentUser ? (
+                            <>
+                                <LikeButton id={job.id} likes={job.likes} />
+                                <a href="#applyNow" class="btn border primary-link">
+                                    Postuler
+                                    <i class="mdi mdi-chevron-double-right"></i>
+                                </a>
+                            </>
+                        ) : (
+                            <a href="/login" className="btn border">Se connecter pour postuler</a>
+                        )
+                    }
 
                 </div>
             </div>
