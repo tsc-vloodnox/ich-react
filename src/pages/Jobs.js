@@ -61,8 +61,8 @@ const Jobs = () => {
                     <li key={category.id}>
                       <a href="/jobs/job-list" class="primary-link">
                         {category.description}
-                        <span class="badge bg-soft-info float-end">{category.jobCount}</span>
                       </a>
+                      <span class="badge bg-soft-info float-end">{category.jobCount}</span>
                     </li>
                   ))}
               </Masonry>

@@ -323,10 +323,11 @@ const Candidates = () => {
                 <div class="row">
                   <div class="col-md-6">
                     <div class="selection-widget mt-3 mt-md-0">
-                      <select class="form-select" data-trigger name="choices-single-filter-orderby" id="choices-single-filter-orderby" aria-label="Default select example">
+                      <select class="form-select">
                         <option value="df">Default</option>
                         <option value="ne">Newest</option>
                         <option value="od">Oldest</option>
+                        <option value="fav">Favorite</option>
                         <option value="rd">Random</option>
                       </select>
                     </div>

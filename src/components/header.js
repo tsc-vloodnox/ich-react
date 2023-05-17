@@ -57,7 +57,7 @@ const Header = () => {
                       </li>
                       <li className="item">
                         <NavLink exact to="/candidates" className={"px-2"}>
-                          Candidatures
+                          Candidats
                         </NavLink>
                       </li>
                       <li className="item">
@@ -190,7 +190,7 @@ const Header = () => {
                   </li>
                   <li >
                     <NavLink exact to="/candidates">
-                      Candidatures
+                      Candidats
                     </NavLink>
                   </li>
                   <li>

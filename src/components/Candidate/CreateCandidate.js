@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { db } from "../../firebaseConfig";
 import { toast } from "react-toastify";
-import { Timestamp, doc, setDoc } from "firebase/firestore";
-import EducationField from "./EducationField";
-import ExperienceField from "./ExperienceField";
+import { Timestamp, addDoc, doc, setDoc } from "firebase/firestore";
 
 const CreateCandidate = () => {
   const { currentUser } = useAuth();
+
   const [candidateData, setCandidateData] = useState({
     name: "",
     age: "",
@@ -37,52 +36,6 @@ const CreateCandidate = () => {
     setGender(e.target.value);
   }
 
-  // EDUCATION
-  const [educationCount, setEducationCount] = useState(0);
-  const [educations, setEducations] = useState(() => {
-    return candidateData.educations.map((education) => (
-      <EducationField
-        diploma={education.diploma}
-        institut={education.institut}
-        years={education.years}
-        details={education.details}
-        onRemove={() => handleRemoveEducation(education)}
-      />
-    ));
-  });
-  const handleAddEducation = () => {
-    setEducationCount(educationCount + 1);
-    setEducations([...educations, <EducationField onRemove={() => handleRemoveEducation(educationCount)} />]);
-  };
-  const handleRemoveEducation = (index) => {
-    const newEducations = [...educations];
-    newEducations.splice(index, 1);
-    setEducations(newEducations);
-  };
-
-  // EXPERIENCE
-  const [experienceCount, setExperienceCount] = useState(0);
-  const [experiences, setExperiences] = useState(() => {
-    return candidateData.experiences.map((experience) => (
-      <ExperienceField
-        jobTitle={experience.jobTitle}
-        companyName={experience.companyName}
-        years={experience.years}
-        details={experience.details}
-        onRemove={() => handleRemoveExperience(experience)}
-      />
-    ));
-  });
-  const handleAddExperience = () => {
-    setExperienceCount(experienceCount + 1);
-    setExperiences([...experiences, <ExperienceField onRemove={() => handleRemoveExperience(experienceCount)} />]);
-  };
-  const handleRemoveExperience = (index) => {
-    const newExperience = [...experiences];
-    newExperience.splice(index, 1);
-    setExperiences(newExperience);
-  };
-
   const handleChange = (e) => {
     setCandidateData({ ...candidateData, [e.target.name]: e.target.value });
   };
@@ -90,25 +43,7 @@ const CreateCandidate = () => {
   function handleCreateCandidateProfile(e) {
     e.preventDefault();
 
-    const educationsData = educations.map((education) => ({
-      diploma: education.diploma,
-      institut: education.institut,
-      years: education.years,
-      details: education.details
-    }));
-
-    const experiencesData = experiences.map((experience) => ({
-      jobTitle: experience.jobTitle,
-      companyName: experience.companyName,
-      years: experience.years,
-      details: experience.details
-    }));
-
-    createCandidateProfile({
-      ...candidateData,
-      educations: educationsData,
-      experiences: experiencesData
-    }, currentUser.uid)
+    createCandidateProfile(candidateData, currentUser.uid)
       .then(() => {
         toast("Profil de candidat créé avec succès");
         window.location.reload();
@@ -121,9 +56,6 @@ const CreateCandidate = () => {
   function createCandidateProfile(candidateData, userId) {
     const candidateRef = doc(db, "Candidats", userId);
 
-    const educations = candidateData.educations || [];
-    const experiences = candidateData.experiences || [];
-
     return setDoc(candidateRef, {
       userID: userId,
       name: candidateData.name,
@@ -135,11 +67,11 @@ const CreateCandidate = () => {
       address: candidateData.address,
       currentOccupation: candidateData.currentOccupation,
       description: candidateData.description,
-      educations: educations,
-      experiences: experiences,
+      educations: [],
+      experiences: [],
       skills: candidateData.skills,
       facebook: candidateData.facebook,
-      twetter: candidateData.twetter,
+      twitter: candidateData.twitter,
       linkedin: candidateData.linkedin,
       whatsapp: candidateData.whatsapp,
       cv: null,
@@ -274,30 +206,6 @@ const CreateCandidate = () => {
       </div>
 
       <div class="mt-4">
-        <h5 class="fs-17 fw-semibold mb-3">Parcourt</h5>
-        {educations.map((education, i) => (
-          <div key={i}>
-            {education}
-          </div>
-        ))}
-        <div className="text-center mt-2">
-          <span className="btn border" onClick={handleAddEducation}>Ajouter</span>
-        </div>
-      </div>
-
-      <div class="mt-4">
-        <h5 class="fs-17 fw-semibold mb-3">Experiences</h5>
-        {experiences.map((experience, i) => (
-          <div key={i}>
-            {experience}
-          </div>
-        ))}
-        <div className="text-center mt-2">
-          <span className="btn border" onClick={handleAddExperience}>Ajouter</span>
-        </div>
-      </div>
-
-      <div class="mt-4">
         <h5 class="fs-17 fw-semibold mb-3">Compétences </h5>
         <div class="row">
           <div class="col-lg-12">
@@ -339,8 +247,8 @@ const CreateCandidate = () => {
               <input
                 type="text"
                 class="form-control"
-                name='twetter'
-                value={candidateData.twetter}
+                name='twitter'
+                value={candidateData.twitter}
                 onChange={(e) => handleChange(e)}
               />
             </div>

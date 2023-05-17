@@ -7,16 +7,14 @@ import { db } from "../firebaseConfig";
 const Profile = () => {
     const navigate = useNavigate();
 
-    const [error, setError] = useState("");
     const { currentUser, logout } = useAuth();
 
     async function handleLogout() {
-        setError("");
         try {
             await logout();
             navigate("/login");
         } catch {
-            setError("Failed to log out");
+            console.log("Failed to log out");
         }
         window.location.reload();
     }
@@ -55,7 +53,7 @@ const Profile = () => {
     }, [currentUser]);
 
     if (!userData) {
-        return <div>Loading...</div>;
+        return <div className="p-4">Loading...</div>;
     }
 
     return (
@@ -68,7 +66,7 @@ const Profile = () => {
                                 <h2 >Mon profile</h2>
                                 <ul >
                                     <li >
-                                        <a routerlink="/" ng-reflect-router-link="/" href="https://peof-ng.hibootstrap.com/">Home</a>
+                                        <a href="/">Home</a>
                                     </li>
                                     <li >
                                         <i class="icofont-simple-right"></i>

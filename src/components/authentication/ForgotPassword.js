@@ -28,27 +28,48 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div>
-      <div>
-        <div>
+    <div className="page-wrapper">
+      <div class="page-title">
+        <div class="d-table">
+          <div class="d-table-cell">
+            <div class="container">
+              <div class="page-title-text">
+                <h2 >Réinitialiser Mon Mot De Passe</h2>
+                <ul >
+                  <li >
+                    <a href="/">Home</a>
+                  </li>
+                  <li >
+                    <i class="icofont-simple-right"></i>
+                  </li>
+                  <li >ForgotPassword</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="container">
+        <div className="row">
           <h2 className="text-center mb-4">Réinitialisation du mot de passe</h2>
           {error && <span variant="danger">{error}</span>}
           {message && <span variant="success">{message}</span>}
           <form onSubmit={handleSubmit}>
-            <div id="email">
-              <label>Email</label>
-              <input type="email" ref={emailRef} required />
+            <div id="email" className="form-group">
+              <label className="form-label">Email</label>
+              <input className="form-control" type="email" ref={emailRef} required />
             </div>
-            <button disabled={loading} className="w-100" type="submit">
-              Réinitialiser
-            </button>
+            <div className="text-center mt-2">
+              <button disabled={loading} className="btn border" type="submit">
+                Réinitialiser
+              </button></div>
           </form>
           <div className="w-100 text-center mt-3">
             <Link to="/login">Connexion</Link>
           </div>
         </div>
       </div>
-      <div className="w-100 text-center mt-2">
+      <div className="text-center mt-2">
         Créer un compte? <Link to="/signup">S'inscrire</Link>
       </div>
     </div>

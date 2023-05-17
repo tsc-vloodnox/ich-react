@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { Timestamp, collection, addDoc, updateDoc, increment, query, onSnapshot } from "firebase/firestore";
+import { Timestamp, collection, addDoc, updateDoc, increment, query, onSnapshot, doc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage, db, } from "../../firebaseConfig";
 import { toast } from "react-toastify";
-
 
 const NewJob = () => {
   const { currentUser } = useAuth();
@@ -21,6 +20,8 @@ const NewJob = () => {
       setCategorys(categorys);
     });
   }, []);
+  const [location, setLocation] = useState("");
+  const [jobType, setJobType] = useState("");
 
   const [jobData, setJobData] = useState({
     jobName: "",
@@ -57,7 +58,7 @@ const NewJob = () => {
 
     try {
       const jobRef = collection(db, "Jobs");
-      const categoryRef = collection(db, "Categories").doc(jobData.categoryId);
+      const categoryRef = doc(db, "Category", jobData.categoryId);
       let jobPicUrl = null;
 
       if (jobData.jobPic) {
@@ -79,7 +80,7 @@ const NewJob = () => {
         await uploadImage;
         jobPicUrl = await getDownloadURL(uploadImage.snapshot.ref);
       }
-
+      console.log(jobData)
       // Ajout du document du nouvel emploi dans la collection "Jobs"
       await addDoc(jobRef, {
         jobName: jobData.jobName,
@@ -87,8 +88,8 @@ const NewJob = () => {
         company: jobData.company,
         salary: jobData.salary,
         vacancies: jobData.vacancies,
-        location: jobData.location,
-        jobType: jobData.jobType,
+        location: location,
+        jobType: jobType,
         description: jobData.description,
         tags: jobData.tags,
         experience: jobData.experience,
@@ -169,7 +170,7 @@ const NewJob = () => {
                 <h2 >Publier votre emploi</h2>
               </div>
               <div class="row">
-                <div class="col-lg-8">
+                <div class="col-lg-6">
                   <div class="form-group">
                     <label >image</label>
                     <input
@@ -205,7 +206,7 @@ const NewJob = () => {
                       <option value="">Choisir la Catégorie</option>
                       {categorys.map((category) => (
                         <option key={category.id} value={category.id}>
-                          {category.name}
+                          {category.description}
                         </option>
                       ))}
                     </select>
@@ -246,36 +247,48 @@ const NewJob = () => {
                       type="text"
                       placeholder="10"
                       class="form-control"
-                      name="vacancy"
-                      value={jobData.vacancy}
+                      name="vacancies"
+                      value={jobData.vacancies}
                       onChange={(e) => handleChange(e)}
                     />
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label >Lieu d'implantation</label>
-                    <input
-                      type="text"
-                      placeholder="210-27 Quadra, Market Street, Victoria Canada"
-                      class="form-control"
-                      value={jobData.location}
-                      name="location"
-                      onChange={(e) => handleChange(e)}
-                    />
+                    <label className="form-label">Lieu d'implantation</label>
+                    <select
+                      class="form-select form-control"
+                      value={location}
+                      onChange={(event) => setLocation(event.target.value)}
+                    >
+                      <option value="">Location</option>
+                      <option value="USA">États-Unis</option>
+                      <option value="CAN">Canada</option>
+                      <option value="UK">Royaume-Uni</option>
+                      <option value="GER">Allemagne</option>
+                      <option value="FRA">France</option>
+                      <option value="AUS">Australie</option>
+                      <option value="RUS">Russie</option>
+                      <option value="MAR">Maroc</option>
+                      <option value="SUI">Suisse</option>
+                      <option value="NED">Pays-Bas</option>
+                    </select>
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label >Type d'emploi</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="temps plein, temps partiel, stagiere,...."
-                      value={jobData.jobType}
+                    <label className="form-label">Type d'emploi</label>
+                    <select
+                      className="form-control form-select"
                       name="jobType"
-                      onChange={(e) => handleChange(e)}
-                    />
+                      value={jobType}
+                      onChange={(event) => setJobType(event.target.value)}
+                    >
+                      <option value="">Type</option>
+                      <option value="Temps plein">Temps plein</option>
+                      <option value="Temps partiel">Temps partiel</option>
+                      <option value="Stagiaire">Stagiaire</option>
+                    </select>
                   </div>
                 </div>
                 <div class="col-lg-6">

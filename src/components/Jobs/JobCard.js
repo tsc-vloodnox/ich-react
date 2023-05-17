@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import DeleteJob from "./DeleteJob";
 import LikeButton from "./LikeButton";
@@ -50,29 +50,19 @@ const JobCard = ({ job }) => {
                         </div>
                     </div>
                     <div className="d-flex align-items-center justify-content-around">
+                        <span class="text-dark">Exp : {job.experience}</span>
                         <span class="badge bg-soft-info fs-13 mt-1">{job.jobType}</span>
                         <span class="badge bg-soft-info fs-13 mt-1">{job.tags}</span>
-
                     </div>
 
                 </div>
                 <div class="p-3 bg-light">
                     <div class="row">
-
-                        <div class="col-lg-8 col-md-5">
+                        <div class="col-lg-12">
                             <div>
                                 <p class="text-muted mb-0">
-                                    <span class="text-dark">Notes :</span>
-                                    {job.description}
-                                </p>
-                            </div>
-                        </div>
+                                    <span class="text-dark">Notes : {job.description}</span>
 
-                        <div class="col-md-4">
-                            <div>
-                                <p class="text-muted mb-0">
-                                    <span class="text-dark">Experience :</span>
-                                    {job.experiance}
                                 </p>
                             </div>
                         </div>

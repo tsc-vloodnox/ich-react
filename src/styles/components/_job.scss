@@ -527,10 +527,19 @@
 .filter-job-input-box.form-select {
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
-    font-size: 14px;
-    height: 44px;
-    padding: 6px 6px 6px 45px;
+    font-size: 1rem;
+    height: 37px;
+    padding: 0.375rem 0.375rem 0.375rem 0.75rem;
     border-radius: 6px;
+}
+
+.select-by-order {
+    display: flex;
+    justify-content: center;
+
+    select {
+        width: auto;
+    }
 }
 
 .job-Categories-list {
@@ -539,7 +548,9 @@
 
     li {
         max-width: 250px;
-        ;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         background-color: #fff;
         padding: 8px 14px;
         border-radius: 4px;
@@ -549,6 +560,6 @@
     }
 
     span {
-        margin-left: 3px;
+        width: 10%;
     }
 }
