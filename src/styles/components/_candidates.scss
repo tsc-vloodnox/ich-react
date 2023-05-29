@@ -78,20 +78,10 @@
 
 .candidate-education-content {
   position: relative;
+  align-items: center;
+  // justify-content: space-between;
 }
 
-.candidate-education-content::before {
-  content: "";
-  position: absolute;
-  border: 1px dashed rgba(118, 109, 244, .4);
-  height: 98px;
-  left: 16px;
-  top: 44px;
-}
-
-.candidate-education-content:last-child::before {
-  opacity: 0;
-}
 
 .candidate-education-content .circle {
   width: 35px;

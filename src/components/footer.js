@@ -2,17 +2,17 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer class="footer-wrap">
-      <div class="container">
-        <div class="row pt-100 pb-75">
-          <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-            <div class="footer-widget">
-              <a href="index.html" class="footer-logo">
+    <footer className="footer-wrap">
+      <div className="container">
+        <div className="row pt-100 pb-75">
+          <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
+            <div className="footer-widget">
+              <a href="index.html" className="footer-logo">
                 <img src="/img/ich1.svg" alt="Image" width={200} />
               </a>
-              <p class="comp-desc">
+              <p className="comp-desc">
                 Si vous cherchez à vivre une expérience de travail unique et enrichissante à l'étranger, nous sommes là pour vous aider à trouver le poste parfait. Contactez-nous dès maintenant pour en savoir plus sur nos services de placement de travail à l'international.              </p>
-              <div class="social-link">
+              <div className="social-link">
                 <ul>
                   <li>
                     <a href="www.fb.com" target="_blank">
@@ -38,10 +38,10 @@ const Footer = () => {
               </div>
             </div>
           </div>
-          <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-            <div class="footer-widget">
-              <h3 class="footer-widget-title">A propos</h3>
-              <ul class="footer-menu">
+          <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
+            <div className="footer-widget">
+              <h3 className="footer-widget-title">A propos</h3>
+              <ul className="footer-menu">
                 <li>
                   <a href="/about">Qui sommes-nous</a>
                 </li>
@@ -60,16 +60,16 @@ const Footer = () => {
               </ul>
             </div>
           </div>
-          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
-            <div class="footer-widget nl">
+          <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+            <div className="footer-widget nl">
               <div>
-                <h3 class="footer-widget-title">Newsletter</h3>
-                <p class="newsletter-text">
+                <h3 className="footer-widget-title">Newsletter</h3>
+                <p className="newsletter-text">
                   Vous recevez des mails sur nos différentes activités et nos
                   offres.
                 </p>
               </div>
-              <form action="#" class="newsletter-form">
+              <form action="#" className="newsletter-form">
                 <input type="email" placeholder="Votre Email…" />
                 <button type="button">Inscription</button>
               </form>
@@ -77,7 +77,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div class="copyright-text">
+      <div className="copyright-text">
         <p>
           <strong>Structure </strong>© 2022 - Designed by{" "}
           <a href="/" target="_blank">

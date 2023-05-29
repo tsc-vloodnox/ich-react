@@ -29,15 +29,15 @@ export default function Login() {
 
   return (
     <div className="page-wrapper login">
-      <div class="page-title">
-        <div class="d-table">
-          <div class="d-table-cell">
-            <div class="container">
-              <div class="page-title-text">
+      <div className="page-title">
+        <div className="d-table">
+          <div className="d-table-cell">
+            <div className="container">
+              <div className="page-title-text">
                 <h2 >Connexion</h2>
                 <ul >
                   <li ><a href="/">Home</a></li>
-                  <li ><i class="icofont-simple-right"></i></li>
+                  <li ><i className="icofont-simple-right"></i></li>
                   <li >Connexion</li>
                 </ul>
               </div>
@@ -48,8 +48,8 @@ export default function Login() {
       <div className="container">
         <div className="create-photo">
           <div className="row align-items-center">
-            <div class="col-lg-4">
-              <div class="already-create">
+            <div className="col-lg-4">
+              <div className="already-create">
                 <span className="mb-2">Créer un compte ?</span>
                 <Link to="/signup">S'inscrire</Link>
               </div>
@@ -58,29 +58,29 @@ export default function Login() {
               <form
                 onSubmit={handleSubmit}
               >
-                <div class="create-photo-item">
-                  <div class="create-photo-right">
-                    <div class="form-group">
+                <div className="create-photo-item">
+                  <div className="create-photo-right">
+                    <div className="form-group">
                       <input
-                        class="form-control"
+                        className="form-control"
                         type="email"
                         placeholder="Email"
                         name="email"
                         required
                       />
                     </div>
-                    <div class="form-group">
+                    <div className="form-group">
                       <input
-                        class="form-control"
+                        className="form-control"
                         type="password"
                         placeholder="Password"
                         name="password"
                         required
                       />
                     </div>
-                    <div class="row">
+                    <div className="row">
                       <button
-                        class="btn create-photo-btn"
+                        className="btn create-photo-btn"
                         disabled={loading}
                         type="submit"
                       >

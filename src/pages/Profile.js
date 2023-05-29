@@ -58,18 +58,18 @@ const Profile = () => {
 
     return (
         <div className='page-wrapper profile'>
-            <div class="page-title">
-                <div class="d-table">
-                    <div class="d-table-cell">
-                        <div class="container">
-                            <div class="page-title-text">
+            <div className="page-title">
+                <div className="d-table">
+                    <div className="d-table-cell">
+                        <div className="container">
+                            <div className="page-title-text">
                                 <h2 >Mon profile</h2>
                                 <ul >
                                     <li >
                                         <a href="/">Home</a>
                                     </li>
                                     <li >
-                                        <i class="icofont-simple-right"></i>
+                                        <i className="icofont-simple-right"></i>
                                     </li>
                                     <li >Mon profile</li>
                                 </ul>
@@ -78,13 +78,13 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
-            <div class="dashboard-area pt-100">
-                <div class="container">
-                    <div class="row align-items-center">
-                        <div class="col-lg-12">
-                            <div class="dashboard-nav">
-                                <ul id="pills-tab" role="tablist" class="nav nav-pills mb-3">
-                                    <li class="nav-item">
+            <div className="dashboard pt-100">
+                <div className="container">
+                    <div className="row align-items-center">
+                        <div className="col-lg-12">
+                            <div className="dashboard-nav">
+                                <ul id="pills-tab" role="tablist" className="nav nav-pills mb-3">
+                                    <li className="nav-item">
                                         <button
                                             id="my-profil"
                                             onClick={handleModals}
@@ -93,7 +93,7 @@ const Profile = () => {
                                             Mon Profile
                                         </button>
                                     </li>
-                                    <li class="nav-item">
+                                    <li className="nav-item">
                                         <button
                                             id="candidate-profil"
                                             onClick={handleModals}
@@ -102,7 +102,7 @@ const Profile = () => {
                                             Profile candidat
                                         </button>
                                     </li>
-                                    <li class="nav-item">
+                                    <li className="nav-item">
                                         <button
                                             id="settings"
                                             onClick={handleModals}
@@ -111,8 +111,8 @@ const Profile = () => {
                                             Mise a jour
                                         </button>
                                     </li>
-                                    <li class="nav-item">
-                                        <button class="nav-link" onClick={handleLogout}>Logout</button>
+                                    <li className="nav-item">
+                                        <button className="nav-link" onClick={handleLogout}>Logout</button>
                                     </li>
                                 </ul>
                             </div>
@@ -124,8 +124,8 @@ const Profile = () => {
                             <>
                                 {userData && (
                                     <>
-                                        <div class="col-lg-4 left-part">
-                                            <img src={currentUser.photoURL} alt="Avatar" className="avatar" width={80} />
+                                        <div className="col-lg-4 left-part">
+                                            <img src={userData.photoURL} alt="Avatar" className="avatar" width={80} />
                                         </div>
                                         <div className="col-lg-8">
                                             <h4>Nom: {userData.fullName}</h4>

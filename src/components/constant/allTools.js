@@ -97,3 +97,8 @@ export const breakpoints = {
   1100: 3,
   700: 2,
 };
+export const breakpointsBlog = {
+  default: 3,
+  1100: 2,
+  700: 1,
+};

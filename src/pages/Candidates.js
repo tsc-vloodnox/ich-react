@@ -1,18 +1,76 @@
 
-import React from 'react'
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import { db } from "../firebaseConfig";
+import { collection, query, onSnapshot } from "firebase/firestore";
+import CandidateCard from "../components/Candidate/CandidateCard";
 
 const Candidates = () => {
+  const { currentUser } = useAuth();
+  const [open, setOpen] = useState(false);
+
+  function closeModal() {
+    setOpen(false);
+  }
+
+  const [candidetes, setCandidates] = useState([]);
+  useEffect(() => {
+    const candidateRef = collection(db, "Candidats");
+    const q = query(candidateRef);
+    onSnapshot(q, (snapshot) => {
+      const candidates = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setCandidates(candidates);
+    });
+  }, []);
+
+
+  // filtreur secondaire
+  const [selectedOrder, setSelectedOrder] = useState("");
+  const handleOrderChange = (event) => {
+    setSelectedOrder(event.target.value);
+  };
+  let orderedCandidates = [...candidetes];
+  function shuffleArray(array) {
+    const shuffledArray = [...array];
+    let currentIndex = shuffledArray.length;
+
+    while (currentIndex !== 0) {
+      const randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      [shuffledArray[currentIndex], shuffledArray[randomIndex]] = [
+        shuffledArray[randomIndex],
+        shuffledArray[currentIndex],
+      ];
+    }
+
+    return shuffledArray;
+  }
+
+  if (selectedOrder === "new") {
+    orderedCandidates.sort((a, b) => b.createdAt - a.createdAt);
+  } else if (selectedOrder === "old") {
+    orderedCandidates.sort((a, b) => a.createdAt - b.createdAt);
+  } else if (selectedOrder === "fav") {
+    orderedCandidates.sort((a, b) => b.likes - a.likes);
+  } else if (selectedOrder === "rdm") {
+    orderedCandidates = shuffleArray(candidetes);
+  }
+
   return (
     <div className='page-wrapper'>
-      <div class="page-title">
-        <div class="d-table">
-          <div class="d-table-cell">
-            <div class="container">
-              <div class="page-title-text">
+      <div className="page-title">
+        <div className="d-table">
+          <div className="d-table-cell">
+            <div className="container">
+              <div className="page-title-text">
                 <h2 >Candidate List</h2>
                 <ul >
                   <li ><a routerlink="/" ng-reflect-router-link="/" href="/">Home</a></li>
-                  <li ><i class="icofont-simple-right"></i>
+                  <li ><i className="icofont-simple-right"></i>
                   </li>
                   <li >Candidate List</li>
                 </ul>
@@ -22,23 +80,23 @@ const Candidates = () => {
         </div>
       </div>
 
-      <section class="section">
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col-lg-12">
-              <div class="candidate-list-widgets mb-4">
+      <section className="section">
+        <div className="container">
+          {/* <div className="row justify-content-center">
+            <div className="col-lg-12">
+              <div className="candidate-list-widgets mb-4">
                 <form action="#">
-                  <div class="row g-2">
-                    <div class="col-lg-3">
-                      <div class="filler-job-form">
-                        <i class="uil uil-briefcase-alt"></i>
-                        <input type="search" class="form-control filter-job-input-box" id="exampleFormControlInput1" placeholder="Job, Company name... " />
+                  <div className="row g-2">
+                    <div className="col-lg-3">
+                      <div className="filler-job-form">
+                        <i className="uil uil-briefcase-alt"></i>
+                        <input type="search" className="form-control filter-job-input-box" id="exampleFormControlInput1" placeholder="Name... " />
                       </div>
                     </div>
-                    <div class="col-lg-3">
-                      <div class="filler-job-form">
-                        <i class="uil uil-location-point"></i>
-                        <select class="form-select" data-trigger name="choices-single-location" id="choices-single-location" aria-label="Default select example">
+                    <div className="col-lg-3">
+                      <div className="filler-job-form">
+                        <i className="uil uil-location-point"></i>
+                        <select className="form-select" data-trigger name="choices-single-location" id="choices-single-location" aria-label="Default select example">
                           <option value="AF">Afghanistan</option>
                           <option value="AX">&Aring;land Islands</option>
                           <option value="AL">Albania</option>
@@ -288,10 +346,10 @@ const Candidates = () => {
                         </select>
                       </div>
                     </div>
-                    <div class="col-lg-3">
-                      <div class="filler-job-form">
-                        <i class="uil uil-clipboard-notes"></i>
-                        <select class="form-select " data-trigger name="choices-single-categories" id="choices-single-categories" aria-label="Default select example">
+                    <div className="col-lg-3">
+                      <div className="filler-job-form">
+                        <i className="uil uil-clipboard-notes"></i>
+                        <select className="form-select " data-trigger name="choices-single-categories" id="choices-single-categories" aria-label="Default select example">
                           <option value="4">Accounting</option>
                           <option value="1">IT & Software</option>
                           <option value="3">Marketing</option>
@@ -299,555 +357,68 @@ const Candidates = () => {
                         </select>
                       </div>
                     </div>
-                    <div class="col-lg-3">
-                      <div>
-                        <a href="javascript:void(0)" class="btn btn-primary"><i class="uil uil-filter"></i> Filter</a>
-                        <a href="javascript:void(0)" class="btn btn-success ms-2"><i class="uil uil-cog"></i> Advance</a>
-                      </div>
+                    <div className="col-lg-3">
+                      <button className="btn btn-primary"><i className="uil uil-filter"></i> Filter</button>
                     </div>
                   </div>
                 </form>
               </div>
             </div>
-          </div>
+          </div> */}
 
-          <div class="row align-items-center">
-            <div class="col-lg-8 col-md-7">
-              <div>
-                <h6 class="fs-16 mb-0"> Showing 1 – 8 of 11 results </h6>
-              </div>
-            </div>
-
-            <div class="col-lg-4 col-md-5">
-              <div class="candidate-list-widgets">
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="selection-widget mt-3 mt-md-0">
-                      <select class="form-select">
-                        <option value="df">Default</option>
-                        <option value="ne">Newest</option>
-                        <option value="od">Oldest</option>
-                        <option value="fav">Favorite</option>
-                        <option value="rd">Random</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="selection-widget mt-3 mt-md-0">
-                      <select class="form-select" data-trigger name="choices-candidate-page" id="choices-candidate-page" aria-label="Default select example">
-                        <option value="all">All</option>
-                        <option value="4">4 per Page</option>
-                        <option value="8">8 per Page</option>
-                        <option value="12">12 per Page</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
+          <div className="mt-3">
+            <div className="select-by-order">
+              <select className="form-select" value={selectedOrder} onChange={handleOrderChange}>
+                <option value="">Ordre</option>
+                <option value="new">Newest</option>
+                <option value="old">Oldest</option>
+                <option value="fav">Favorite</option>
+                <option value="rdm">Random</option>
+              </select>
             </div>
           </div>
 
-          <div class="candidate-list">
-            <div class="row">
-              <div class="col-lg-4 col-md-6">
-                <div class="candidate-grid-box bookmark-post card mt-4">
-                  <div class="card-body p-4">
-                    <div class="featured-label">
-                      <span class="featured">featured</span>
-                    </div>
-                    <div class="d-flex mb-4">
-                      <div class="flex-shrink-0 position-relative">
-                        <img src="assets/images/user/img-01.jpg" alt="" class="avatar-md rounded" />
-                        <span class="profile-active position-absolute badge rounded-circle bg-success"><span class="visually-hidden">active</span></span>
-                      </div>
-                      <div class="ms-3">
-                        <a href="/candidates/candidate-details" class="primary-link"><h5 class="fs-17">Charles Dickens</h5></a>
-                        <span class="badge bg-soft-info fs-13">$800/month</span>
-                      </div>
-                    </div>
-                    <ul class="list-inline d-flex justify-content-between align-items-center">
-                      <li class="list-inline-item text-warning fs-17">
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star-half-full"></i>
-                      </li>
-                      <li class="list-inline-item">
-                        <div class="favorite-icon">
-                          <a href="javascript:void(0)"><i class="uil uil-heart-alt fs-18"></i></a>
-                        </div>
-                      </li>
-                    </ul>
-                    <div class="border rounded mb-4">
-                      <div class="row g-0">
-                        <div class="col-lg-6">
-                          <div class="border-end px-3 py-2">
-                            <p class="text-muted mb-0">Exp. : 0-3 Years</p>
-                          </div>
-                        </div>
-                        <div class="col-lg-6">
-                          <div class="px-3 py-2">
-                            <p class="text-muted mb-0">Freelancers</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <p class="text-muted">Some quick example text to build on the card title and bulk the card's content Moltin gives you platform.</p>
-                    <div class="mt-3">
-                      <a href="#hireNow" data-bs-toggle="modal" class="btn btn-primary btn-hover w-100 mt-2"><i class="mdi mdi-account-check"></i> Hire Now</a>
-                      <a href="/candidates/candidate-details" class="btn btn-soft-primary btn-hover w-100 mt-2"><i class="mdi mdi-eye"></i> View Profile</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-4 col-md-6">
-                <div class="candidate-grid-box bookmark-post card mt-4">
-                  <div class="card-body p-4">
-                    <div class="d-flex mb-4">
-                      <div class="flex-shrink-0 position-relative">
-                        <img src="assets/images/user/img-02.jpg" alt="" class="avatar-md rounded" />
-                        <span class="profile-active position-absolute badge rounded-circle bg-success"><span class="visually-hidden">active</span></span>
-                      </div>
-                      <div class="ms-3">
-                        <a href="/candidates/candidate-details" class="primary-link"><h5 class="fs-17">Gabriel Palmer</h5></a>
-                        <span class="badge bg-soft-info fs-13">$350/hrs</span>
-                      </div>
-                    </div>
-                    <ul class="list-inline d-flex justify-content-between align-items-center">
-                      <li class="list-inline-item text-warning fs-17">
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star-half-full"></i>
-                      </li>
-                      <li class="list-inline-item">
-                        <div class="favorite-icon">
-                          <a href="javascript:void(0)"><i class="uil uil-heart-alt fs-18"></i></a>
-                        </div>
-                      </li>
-                    </ul>
-                    <div class="border rounded mb-4">
-                      <div class="row g-0">
-                        <div class="col-lg-6">
-                          <div class="border-end px-3 py-2">
-                            <p class="text-muted mb-0">Exp. : 3.5  Years</p>
-                          </div>
-                        </div>
-                        <div class="col-lg-6">
-                          <div class="px-3 py-2">
-                            <p class="text-muted mb-0">Freelancers</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <p class="text-muted">Some quick example text to build on the card title and bulk the card's content Moltin gives you platform.</p>
-                    <div class="mt-3">
-                      <a href="#hireNow" data-bs-toggle="modal" class="btn btn-primary btn-hover w-100 mt-2"><i class="mdi mdi-account-check"></i> Hire Now</a>
-                      <a href="/candidates/candidate-details" class="btn btn-soft-primary btn-hover w-100 mt-2"><i class="mdi mdi-eye"></i> View Profile</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-4 col-md-6">
-                <div class="candidate-grid-box card mt-4">
-                  <div class="card-body p-4">
-                    <div class="featured-label">
-                      <span class="featured">Urgent</span>
-                    </div>
-                    <div class="d-flex mb-4">
-                      <div class="flex-shrink-0 position-relative">
-                        <img src="assets/images/user/img-03.jpg" alt="" class="avatar-md rounded" />
-                        <span class="profile-active position-absolute badge rounded-circle bg-danger"><span class="visually-hidden">active</span></span>
-                      </div>
-                      <div class="ms-3">
-                        <a href="/candidates/candidate-details" class="primary-link"><h5 class="fs-17">James Lemire</h5></a>
-                        <span class="badge bg-soft-info fs-13">$280/hrs</span>
-                      </div>
-                    </div>
-                    <ul class="list-inline d-flex justify-content-between align-items-center">
-                      <li class="list-inline-item text-warning fs-17">
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star-half-full"></i>
-                      </li>
-                      <li class="list-inline-item">
-                        <div class="favorite-icon">
-                          <a href="javascript:void(0)"><i class="uil uil-heart-alt fs-18"></i></a>
-                        </div>
-                      </li>
-                    </ul>
-                    <div class="border rounded mb-4">
-                      <div class="row g-0">
-                        <div class="col-lg-6">
-                          <div class="border-end px-3 py-2">
-                            <p class="text-muted mb-0">Exp. : 4 Years</p>
-                          </div>
-                        </div>
-                        <div class="col-lg-6">
-                          <div class="px-3 py-2">
-                            <p class="text-muted mb-0">Freelancers</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <p class="text-muted">Some quick example text to build on the card title and bulk the card's content Moltin gives you platform.</p>
-                    <div class="mt-3">
-                      <a href="#hireNow" data-bs-toggle="modal" class="btn btn-primary btn-hover w-100 mt-2"><i class="mdi mdi-account-check"></i> Hire Now</a>
-                      <a href="/candidates/candidate-details" class="btn btn-soft-primary btn-hover w-100 mt-2"><i class="mdi mdi-eye"></i> View Profile</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-4 col-md-6">
-                <div class="candidate-grid-box card mt-4">
-                  <div class="card-body p-4">
-                    <div class="d-flex mb-4">
-                      <div class="flex-shrink-0 position-relative">
-                        <img src="assets/images/user/img-04.jpg" alt="" class="avatar-md rounded" />
-                        <span class="profile-active position-absolute badge rounded-circle bg-success"><span class="visually-hidden">active</span></span>
-                      </div>
-                      <div class="ms-3">
-                        <a href="/candidates/candidate-details" class="primary-link"><h5 class="fs-17">Rebecca Swartz</h5></a>
-                        <span class="badge bg-soft-info fs-13">$240/hrs</span>
-                      </div>
-                    </div>
-                    <ul class="list-inline d-flex justify-content-between align-items-center">
-                      <li class="list-inline-item text-warning fs-17">
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star-half-full"></i>
-                      </li>
-                      <li class="list-inline-item">
-                        <div class="favorite-icon">
-                          <a href="javascript:void(0)"><i class="uil uil-heart-alt fs-18"></i></a>
-                        </div>
-                      </li>
-                    </ul>
-                    <div class="border rounded mb-4">
-                      <div class="row g-0">
-                        <div class="col-lg-6">
-                          <div class="border-end px-3 py-2">
-                            <p class="text-muted mb-0">Exp. : 2 Years</p>
-                          </div>
-                        </div>
-                        <div class="col-lg-6">
-                          <div class="px-3 py-2">
-                            <p class="text-muted mb-0">Freelancers</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <p class="text-muted">Some quick example text to build on the card title and bulk the card's content Moltin gives you platform.</p>
-                    <div class="mt-3">
-                      <a href="#hireNow" data-bs-toggle="modal" class="btn btn-primary btn-hover w-100 mt-2"><i class="mdi mdi-account-check"></i> Hire Now</a>
-                      <a href="/candidates/candidate-details" class="btn btn-soft-primary btn-hover w-100 mt-2"><i class="mdi mdi-eye"></i> View Profile</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-4 col-md-6">
-                <div class="candidate-grid-box card mt-4">
-                  <div class="card-body p-4">
-                    <div class="d-flex mb-4">
-                      <div class="flex-shrink-0 position-relative">
-                        <img src="assets/images/user/img-05.jpg" alt="" class="avatar-md rounded" />
-                        <span class="profile-active position-absolute badge rounded-circle bg-success"><span class="visually-hidden">active</span></span>
-                      </div>
-                      <div class="ms-3">
-                        <a href="/candidates/candidate-details" class="primary-link"><h5 class="fs-17">Betty Richards</h5></a>
-                        <span class="badge bg-soft-info fs-13">$198/hrs</span>
-                      </div>
-                    </div>
-                    <ul class="list-inline d-flex justify-content-between align-items-center">
-                      <li class="list-inline-item text-warning fs-17">
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star-half-full"></i>
-                      </li>
-                      <li class="list-inline-item">
-                        <div class="favorite-icon">
-                          <a href="javascript:void(0)"><i class="uil uil-heart-alt fs-18"></i></a>
-                        </div>
-                      </li>
-                    </ul>
-                    <div class="border rounded mb-4">
-                      <div class="row g-0">
-                        <div class="col-lg-6">
-                          <div class="border-end px-3 py-2">
-                            <p class="text-muted mb-0">Exp. : 2 Years</p>
-                          </div>
-                        </div>
-                        <div class="col-lg-6">
-                          <div class="px-3 py-2">
-                            <p class="text-muted mb-0">Freelancers</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <p class="text-muted">Some quick example text to build on the card title and bulk the card's content Moltin gives you platform.</p>
-                    <div class="mt-3">
-                      <a href="#hireNow" data-bs-toggle="modal" class="btn btn-primary btn-hover w-100 mt-2"><i class="mdi mdi-account-check"></i> Hire Now</a>
-                      <a href="/candidates/candidate-details" class="btn btn-soft-primary btn-hover w-100 mt-2"><i class="mdi mdi-eye"></i> View Profile</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-4 col-md-6">
-                <div class="candidate-grid-box bookmark-post card mt-4">
-                  <div class="card-body p-4">
-                    <div class="d-flex mb-4">
-                      <div class="flex-shrink-0 position-relative">
-                        <img src="assets/images/user/img-06.jpg" alt="" class="avatar-md rounded" />
-                        <span class="profile-active position-absolute badge rounded-circle bg-success"><span class="visually-hidden">active</span></span>
-                      </div>
-                      <div class="ms-3">
-                        <a href="/candidates/candidate-details" class="primary-link"><h5 class="fs-17">Jeffrey Montgomery</h5></a>
-                        <span class="badge bg-soft-info fs-13">$299/hrs</span>
-                      </div>
-                    </div>
-                    <ul class="list-inline d-flex justify-content-between align-items-center">
-                      <li class="list-inline-item text-warning fs-17">
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star-half-full"></i>
-                      </li>
-                      <li class="list-inline-item">
-                        <div class="favorite-icon">
-                          <a href="javascript:void(0)"><i class="uil uil-heart-alt fs-18"></i></a>
-                        </div>
-                      </li>
-                    </ul>
-                    <div class="border rounded mb-4">
-                      <div class="row g-0">
-                        <div class="col-lg-6">
-                          <div class="border-end px-3 py-2">
-                            <p class="text-muted mb-0">Exp. : 7 Years</p>
-                          </div>
-                        </div>
-                        <div class="col-lg-6">
-                          <div class="px-3 py-2">
-                            <p class="text-muted mb-0">Freelancers</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <p class="text-muted">Some quick example text to build on the card title and bulk the card's content Moltin gives you platform.</p>
-                    <div class="mt-3">
-                      <a href="#hireNow" data-bs-toggle="modal" class="btn btn-primary btn-hover w-100 mt-2"><i class="mdi mdi-account-check"></i> Hire Now</a>
-                      <a href="/candidates/candidate-details" class="btn btn-soft-primary btn-hover w-100 mt-2"><i class="mdi mdi-eye"></i> View Profile</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-4 col-md-6">
-                <div class="candidate-grid-box bookmark-post card mt-4">
-                  <div class="card-body p-4">
-                    <div class="d-flex mb-4">
-                      <div class="flex-shrink-0 position-relative">
-                        <img src="assets/images/user/img-07.jpg" alt="" class="avatar-md rounded" />
-                        <span class="profile-active position-absolute badge rounded-circle bg-success"><span class="visually-hidden">active</span></span>
-                      </div>
-                      <div class="ms-3">
-                        <a href="/candidates/candidate-details" class="primary-link"><h5 class="fs-17">Brooke Hayes</h5></a>
-                        <span class="badge bg-soft-info fs-13">$310/hrs</span>
-                      </div>
-                    </div>
-                    <ul class="list-inline d-flex justify-content-between align-items-center">
-                      <li class="list-inline-item text-warning fs-17">
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star-half-full"></i>
-                      </li>
-                      <li class="list-inline-item">
-                        <div class="favorite-icon">
-                          <a href="javascript:void(0)"><i class="uil uil-heart-alt fs-18"></i></a>
-                        </div>
-                      </li>
-                    </ul>
-                    <div class="border rounded mb-4">
-                      <div class="row g-0">
-                        <div class="col-lg-6">
-                          <div class="border-end px-3 py-2">
-                            <p class="text-muted mb-0">Exp. : 4 Years</p>
-                          </div>
-                        </div>
-                        <div class="col-lg-6">
-                          <div class="px-3 py-2">
-                            <p class="text-muted mb-0">Freelancers</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <p class="text-muted">Some quick example text to build on the card title and bulk the card's content Moltin gives you platform.</p>
-                    <div class="mt-3">
-                      <a href="#hireNow" data-bs-toggle="modal" class="btn btn-primary btn-hover w-100 mt-2"><i class="mdi mdi-account-check"></i> Hire Now</a>
-                      <a href="/candidates/candidate-details" class="btn btn-soft-primary btn-hover w-100 mt-2"><i class="mdi mdi-eye"></i> View Profile</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-4 col-md-6">
-                <div class="candidate-grid-box card mt-4">
-                  <div class="card-body p-4">
-                    <div class="d-flex mb-4">
-                      <div class="flex-shrink-0 position-relative">
-                        <img src="assets/images/user/img-08.jpg" alt="" class="avatar-md rounded" />
-                        <span class="profile-active position-absolute badge rounded-circle bg-danger"><span class="visually-hidden">active</span></span>
-                      </div>
-                      <div class="ms-3">
-                        <a href="/candidates/candidate-details" class="primary-link"><h5 class="fs-17">Cerys Woods</h5></a>
-                        <span class="badge bg-soft-info fs-13">$450/hrs</span>
-                      </div>
-                    </div>
-                    <ul class="list-inline d-flex justify-content-between align-items-center">
-                      <li class="list-inline-item text-warning fs-17">
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star-half-full"></i>
-                      </li>
-                      <li class="list-inline-item">
-                        <div class="favorite-icon">
-                          <a href="javascript:void(0)"><i class="uil uil-heart-alt fs-18"></i></a>
-                        </div>
-                      </li>
-                    </ul>
-                    <div class="border rounded mb-4">
-                      <div class="row g-0">
-                        <div class="col-lg-6">
-                          <div class="border-end px-3 py-2">
-                            <p class="text-muted mb-0">Exp. : 4.5 Years</p>
-                          </div>
-                        </div>
-                        <div class="col-lg-6">
-                          <div class="px-3 py-2">
-                            <p class="text-muted mb-0">Freelancers</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <p class="text-muted">Some quick example text to build on the card title and bulk the card's content Moltin gives you platform.</p>
-                    <div class="mt-3">
-                      <a href="#hireNow" data-bs-toggle="modal" class="btn btn-primary btn-hover w-100 mt-2"><i class="mdi mdi-account-check"></i> Hire Now</a>
-                      <a href="/candidates/candidate-details" class="btn btn-soft-primary btn-hover w-100 mt-2"><i class="mdi mdi-eye"></i> View Profile</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-4 col-md-6">
-                <div class="candidate-grid-box card mt-4">
-                  <div class="card-body p-4">
-                    <div class="d-flex mb-4">
-                      <div class="flex-shrink-0 position-relative">
-                        <img src="assets/images/user/img-09.jpg" alt="" class="avatar-md rounded" />
-                        <span class="profile-active position-absolute badge rounded-circle bg-success"><span class="visually-hidden">active</span></span>
-                      </div>
-                      <div class="ms-3">
-                        <a href="/candidates/candidate-details" class="primary-link"><h5 class="fs-17">Olivia Murphy</h5></a>
-                        <span class="badge bg-soft-info fs-13">$300/hrs</span>
-                      </div>
-                    </div>
-                    <ul class="list-inline d-flex justify-content-between align-items-center">
-                      <li class="list-inline-item text-warning fs-17">
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star"></i>
-                        <i class="mdi mdi-star-half-full"></i>
-                      </li>
-                      <li class="list-inline-item">
-                        <div class="favorite-icon">
-                          <a href="javascript:void(0)"><i class="uil uil-heart-alt fs-18"></i></a>
-                        </div>
-                      </li>
-                    </ul>
-                    <div class="border rounded mb-4">
-                      <div class="row g-0">
-                        <div class="col-lg-6">
-                          <div class="border-end px-3 py-2">
-                            <p class="text-muted mb-0">Exp. : 7 Years</p>
-                          </div>
-                        </div>
-                        <div class="col-lg-6">
-                          <div class="px-3 py-2">
-                            <p class="text-muted mb-0">Freelancers</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <p class="text-muted">Some quick example text to build on the card title and bulk the card's content Moltin gives you platform.</p>
-                    <div class="mt-3">
-                      <a href="#hireNow" data-bs-toggle="modal" class="btn btn-primary btn-hover w-100 mt-2"><i class="mdi mdi-account-check"></i> Hire Now</a>
-                      <a href="/candidates/candidate-details" class="btn btn-soft-primary btn-hover w-100 mt-2"><i class="mdi mdi-eye"></i> View Profile</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row mt-5 pt-2">
-            <div class="col-lg-12">
-              <nav aria-label="Page navigation example">
-                <ul class="pagination job-pagination mb-0 justify-content-center">
-                  <li class="page-item disabled">
-                    <a class="page-link" href="javascript:void(0)" tabindex="-1">
-                      <i class="mdi mdi-chevron-double-left fs-15"></i>
-                    </a>
-                  </li>
-                  <li class="page-item active"><a class="page-link" href="javascript:void(0)">1</a></li>
-                  <li class="page-item"><a class="page-link" href="javascript:void(0)">2</a></li>
-                  <li class="page-item"><a class="page-link" href="javascript:void(0)">3</a></li>
-                  <li class="page-item"><a class="page-link" href="javascript:void(0)">4</a></li>
-                  <li class="page-item">
-                    <a class="page-link" href="javascript:void(0)">
-                      <i class="mdi mdi-chevron-double-right fs-15"></i>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
+          <div className="candidate-list">
+            <div className="row">
+              {orderedCandidates.length > 0 &&
+                orderedCandidates.map((candidete) => (
+                  <CandidateCard candidate={candidete} key={candidete.id} setOpen={setOpen} open={open} user={currentUser} />
+                ))
+              }
             </div>
           </div>
 
         </div>
       </section>
 
-      <div class="modal fade" id="hireNow" tabindex="-1" aria-labelledby="hireNow" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-body p-5">
-              <div class="text-center mb-4">
-                <h5 class="modal-title" id="staticBackdropLabel">Hire Now</h5>
+      <div className={open ? "modal show" : "modal"}>
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-body p-5">
+              <div className="text-center mb-4">
+                <h5 className="modal-title" >Hire Now</h5>
               </div>
-              <div class="position-absolute end-0 top-0 p-3">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <div className="position-absolute end-0 top-0 p-3">
+                <button
+                  type="button"
+                  className="close"
+                  onClick={closeModal}
+                >
+                  &times;
+                </button>              </div>
+              <div className="mb-3">
+                <label className="form-label">Company Name</label>
+                <input type="text" className="form-control" placeholder="Enter your company name" />
               </div>
-              <div class="mb-3">
-                <label for="namrFormControlInput" class="form-label">Company Name</label>
-                <input type="text" class="form-control" id="namrFormControlInput" placeholder="Enter your company name" />
+              <div className="mb-3">
+                <label className="form-label">Email Address</label>
+                <input type="email" className="form-control" placeholder="Enter your email" />
               </div>
-              <div class="mb-3">
-                <label for="emailFormControlInput" class="form-label">Email Address</label>
-                <input type="email" class="form-control" id="emailFormControlInput" placeholder="Enter your email" />
+              <div className="mb-4">
+                <label className="form-label">Message</label>
+                <textarea className="form-control" rows="4" placeholder="Enter your message" />
               </div>
-              <div class="mb-4">
-                <label for="messageFormControlTextarea" class="form-label">Message</label>
-                <textarea class="form-control" id="messageFormControlTextarea" rows="4" placeholder="Enter your message" />
-              </div>
-              <button type="submit" class="btn btn-primary w-100">Send Message</button>
+              <button type="submit" className="btn btn-primary w-100">Send Message</button>
             </div>
           </div>
         </div>

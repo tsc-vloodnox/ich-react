@@ -21,15 +21,15 @@ const Jobs = () => {
 
   return (
     <div className='page-wrapper'>
-      <div class="page-title">
-        <div class="d-table">
-          <div class="d-table-cell">
-            <div class="container">
-              <div class="page-title-text">
+      <div className="page-title">
+        <div className="d-table">
+          <div className="d-table-cell">
+            <div className="container">
+              <div className="page-title-text">
                 <h2 >Job Categories</h2>
                 <ul >
                   <li ><a routerlink="/" ng-reflect-router-link="/" href="/">Home</a></li>
-                  <li ><i class="icofont-simple-right"></i>
+                  <li ><i className="icofont-simple-right"></i>
                   </li>
                   <li >Job Categories</li>
                 </ul>
@@ -39,17 +39,17 @@ const Jobs = () => {
         </div>
       </div>
 
-      <section class="section">
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col-lg-6">
-              <div class="text-center mb-5">
+      <section className="section">
+        <div className="container">
+          <div className="row justify-content-center">
+            <div className="col-lg-6">
+              <div className="text-center mb-5">
                 <h4>Parcourir les emplois par catégories</h4>
               </div>
             </div>
           </div>
-          <div class="card job-Categories-box bg-light border-0">
-            <div class="card-body p-4">
+          <div className="card job-Categories-box bg-light border-0">
+            <div className="card-body p-4">
               <Masonry
                 breakpointCols={breakpoints}
                 className="my-masonry-grid list-unstyled job-Categories-list mb-0"
@@ -59,10 +59,10 @@ const Jobs = () => {
                 {categorys.length > 0 &&
                   categorys.map((category) => (
                     <li key={category.id}>
-                      <a href="/jobs/job-list" class="primary-link">
+                      <a href="/jobs/job-list" className="primary-link">
                         {category.description}
                       </a>
-                      <span class="badge bg-soft-info float-end">{category.jobCount}</span>
+                      <span className="badge bg-soft-info float-end">{category.jobCount}</span>
                     </li>
                   ))}
               </Masonry>

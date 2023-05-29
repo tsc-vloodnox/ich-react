@@ -57,7 +57,7 @@ export default function UpdateProfile() {
   return (
     <div className="update-profile">
       <div className="row align-items-center">
-        <div class="col-lg-4 left-part">
+        <div className="col-lg-4 left-part">
           <img src={currentUser.photoURL} alt="Avatar" className="avatar" width={80} />
           <div className="upload">
             <label htmlFor="file">Changer</label>
@@ -71,7 +71,7 @@ export default function UpdateProfile() {
             <button disabled={loading || !photo} onClick={handleClick}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="icon icon-tabler icon-tabler-upload"
+                className="icon icon-tabler icon-tabler-upload"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"

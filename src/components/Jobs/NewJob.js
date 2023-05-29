@@ -20,23 +20,55 @@ const NewJob = () => {
       setCategorys(categorys);
     });
   }, []);
-  const [location, setLocation] = useState("");
+
+  const [city, setCity] = useState("");
+  const [country, setCountry] = useState("");
+  const location = `${city} - ${country}`;
   const [jobType, setJobType] = useState("");
+  const [tagsChaine, setTagsChaine] = useState("");
+  const [tagsList, setTagsList] = useState("");
+
+  const handleTagsChaineChange = (e) => {
+    setTagsChaine(e.target.value)
+  }
+  const separerChaines = () => {
+    const mots = tagsChaine.split(",");
+    setTagsList(mots);
+  }
+  useEffect(() => {
+    separerChaines();
+  }, [tagsChaine]);
 
   const [jobData, setJobData] = useState({
     jobName: "",
-    categoryId: "",
+    categoryName: "",
+    categoryID: "",
     company: "",
     salary: "",
     vacancies: "",
     location: "",
     jobType: "",
     description: "",
-    tags: "",
+    tags: [],
     experience: "",
     jobPic: "",
     createdAt: Timestamp.now().toDate(),
   });
+  const cancelPost = () => {
+    setJobData({
+      jobName: "",
+      categoryName: "",
+      company: "",
+      salary: "",
+      vacancies: "",
+      location: "",
+      jobType: "",
+      description: "",
+      tags: "",
+      experience: "",
+      jobPic: "",
+    });
+  };
 
   const [progress, setProgress] = useState(0);
 
@@ -44,25 +76,21 @@ const NewJob = () => {
     setJobData({ ...jobData, [e.target.name]: e.target.value });
   };
   const handleCategoryChange = (e) => {
-    setJobData({ ...jobData, categoryId: e.target.value }); // Mise à jour de la propriété categoryId
+    setJobData({ ...jobData, categoryName: e.target.value });
   };
   const handleImageChange = (e) => {
     setJobData({ ...jobData, jobPic: e.target.files[0] });
   };
 
   const handlePublish = async () => {
-    if (!jobData.jobName) {
-      alert("Veuillez entrer un message");
-      return;
-    }
 
     try {
       const jobRef = collection(db, "Jobs");
-      const categoryRef = doc(db, "Category", jobData.categoryId);
+      const selectedCategory = categorys.find(category => category.name === jobData.categoryName);
+      const categoryRef = doc(db, "Category", selectedCategory.id);
       let jobPicUrl = null;
 
       if (jobData.jobPic) {
-        // Téléchargement de l'image et récupération de l'URL
         const storageRef = ref(storage, `/images/${Date.now()}${jobData.jobPic.name}`);
         const uploadImage = uploadBytesResumable(storageRef, jobData.jobPic);
 
@@ -81,17 +109,17 @@ const NewJob = () => {
         jobPicUrl = await getDownloadURL(uploadImage.snapshot.ref);
       }
       console.log(jobData)
-      // Ajout du document du nouvel emploi dans la collection "Jobs"
       await addDoc(jobRef, {
         jobName: jobData.jobName,
-        categoryId: jobData.categoryId,
+        categoryName: jobData.categoryName,
+        categoryID: selectedCategory.id,
         company: jobData.company,
         salary: jobData.salary,
         vacancies: jobData.vacancies,
         location: location,
         jobType: jobType,
         description: jobData.description,
-        tags: jobData.tags,
+        tags: tagsList,
         experience: jobData.experience,
         jobPic: jobPicUrl,
         createdAt: Timestamp.now().toDate(),
@@ -101,59 +129,30 @@ const NewJob = () => {
         likes: [],
       });
 
-      // Incrémentation du jobCount de la catégorie correspondante
       await updateDoc(categoryRef, {
         jobCount: increment(1)
       });
 
       toast("Job added successfully", { type: "success" });
       setProgress(0);
-      setJobData({
-        jobName: "",
-        categoryId: "",
-        company: "",
-        salary: "",
-        vacancies: "",
-        location: "",
-        jobType: "",
-        description: "",
-        tags: "",
-        experience: "",
-        jobPic: "",
-      });
+      cancelPost();
     } catch (error) {
       toast("Error adding job", { type: "error" });
       console.log(error);
     }
   };
 
-  const cancelPost = () => {
-    setJobData({
-      jobName: "",
-      categoryId: "",
-      company: "",
-      salary: "",
-      vacancies: "",
-      location: "",
-      jobType: "",
-      description: "",
-      tags: "",
-      experience: "",
-      jobPic: "",
-    });
-  };
-
   return (
     <div className='page-wrapper'>
-      <div class="page-title">
-        <div class="d-table">
-          <div class="d-table-cell">
-            <div class="container">
-              <div class="page-title-text">
+      <div className="page-title">
+        <div className="d-table">
+          <div className="d-table-cell">
+            <div className="container">
+              <div className="page-title-text">
                 <h2 >Post A Job</h2>
                 <ul >
                   <li ><a href="/">Home</a></li>
-                  <li ><i class="icofont-simple-right"></i></li>
+                  <li ><i className="icofont-simple-right"></i></li>
                   <li >Post A Job</li>
                 </ul>
               </div>
@@ -162,125 +161,143 @@ const NewJob = () => {
         </div>
       </div>
 
-      <div class="post-job-area pt-100">
-        <div class="container">
-          <div class="post-job-item">
+      <div className="post-job pt-100">
+        <div className="container">
+          <div className="post-job-item">
             <div className="form">
-              <div class="post-job-heading">
+              <div className="post-job-heading">
                 <h2 >Publier votre emploi</h2>
               </div>
-              <div class="row">
-                <div class="col-lg-6">
-                  <div class="form-group">
+              <div className="row">
+                <div className="col-lg-6">
+                  <div className="form-group">
                     <label >image</label>
                     <input
                       type="file"
-                      class="form-control"
+                      className="form-control"
                       name="jobPic"
+                      accept='image/*'
                       onChange={(e) => handleImageChange(e)}
+                      required
                     />
                   </div>
                 </div>
-                <div class="col-lg-6">
-                  <div class="form-group">
+                <div className="col-lg-6">
+                  <div className="form-group">
                     <label >Titre du poste</label>
                     <input
                       type="text"
                       placeholder="UX/UI Designer"
-                      class="form-control"
+                      className="form-control"
                       value={jobData.jobName}
                       name="jobName"
+                      required
                       onChange={(e) => handleChange(e)}
                     />
                   </div>
                 </div>
-                <div class="col-lg-6">
-                  <div class="form-group">
+                <div className="col-lg-6">
+                  <div className="form-group">
                     <label>Categories</label>
                     <select
                       className="form-control form-select"
-                      name="categoryId"
-                      value={jobData.categoryId}
+                      name="categoryName"
+                      value={jobData.categoryName}
+                      required
                       onChange={handleCategoryChange}
                     >
                       <option value="">Choisir la Catégorie</option>
                       {categorys.map((category) => (
-                        <option key={category.id} value={category.id}>
+                        <option key={category.id} value={category.name}>
                           {category.description}
                         </option>
                       ))}
                     </select>
                   </div>
                 </div>
-                <div class="col-lg-6">
-                  <div class="form-group">
+                <div className="col-lg-6">
+                  <div className="form-group">
                     <label >Nom de l'entreprise</label>
                     <input
                       type="text"
                       placeholder="Winbrans.com"
-                      class="form-control"
+                      className="form-control"
                       name="company"
+                      required
                       value={jobData.company}
                       onChange={(e) => handleChange(e)}
                     />
                   </div>
                 </div>
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <div class="job-currency-area">
+                <div className="col-lg-6">
+                  <div className="form-group">
+                    <div className="job-currency">
                       <label >Salaire</label>
                       <input
                         type="text"
                         placeholder="$1500-2400/m"
-                        class="form-control"
+                        className="form-control"
                         value={jobData.salary}
                         name="salary"
+                        required
                         onChange={(e) => handleChange(e)}
                       />
                     </div>
                   </div>
                 </div>
-                <div class="col-lg-6">
-                  <div class="form-group">
+                <div className="col-lg-6">
+                  <div className="form-group">
                     <label >Postes vacants</label>
                     <input
                       type="text"
                       placeholder="10"
-                      class="form-control"
+                      className="form-control"
                       name="vacancies"
                       value={jobData.vacancies}
                       onChange={(e) => handleChange(e)}
                     />
                   </div>
                 </div>
-                <div class="col-lg-6">
-                  <div class="form-group">
+                <div className="col-lg-6">
+                  <div className="form-group">
                     <label className="form-label">Lieu d'implantation</label>
-                    <select
-                      class="form-select form-control"
-                      value={location}
-                      onChange={(event) => setLocation(event.target.value)}
-                    >
-                      <option value="">Location</option>
-                      <option value="USA">États-Unis</option>
-                      <option value="CAN">Canada</option>
-                      <option value="UK">Royaume-Uni</option>
-                      <option value="GER">Allemagne</option>
-                      <option value="FRA">France</option>
-                      <option value="AUS">Australie</option>
-                      <option value="RUS">Russie</option>
-                      <option value="MAR">Maroc</option>
-                      <option value="SUI">Suisse</option>
-                      <option value="NED">Pays-Bas</option>
-                    </select>
+                    <div className="d-flex">
+                      <input
+                        className="form-control"
+                        placeholder="address"
+                        name="city"
+                        onChange={(event) => setCity(event.target.value)}
+                      />
+                      <select
+                        className="form-select form-control"
+                        value={country}
+                        required
+                        name="country"
+                        onChange={(event) => setCountry(event.target.value)}
+                      >
+                        <option value="">Location</option>
+                        <option value="USA">États-Unis</option>
+                        <option value="CAN">Canada</option>
+                        <option value="UK">Royaume-Uni</option>
+                        <option value="GER">Allemagne</option>
+                        <option value="FRA">France</option>
+                        <option value="AUS">Australie</option>
+                        <option value="RUS">Russie</option>
+                        <option value="MAR">Maroc</option>
+                        <option value="SUI">Suisse</option>
+                        <option value="NED">Pays-Bas</option>
+                        <option value="CIV">Cote D'Ivoire</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
-                <div class="col-lg-6">
-                  <div class="form-group">
+                <div className="col-lg-6">
+                  <div className="form-group">
                     <label className="form-label">Type d'emploi</label>
                     <select
                       className="form-control form-select"
                       name="jobType"
+                      required
                       value={jobType}
                       onChange={(event) => setJobType(event.target.value)}
                     >
@@ -291,50 +308,52 @@ const NewJob = () => {
                     </select>
                   </div>
                 </div>
-                <div class="col-lg-6">
-                  <div class="form-group">
+                <div className="col-lg-6">
+                  <div className="form-group">
                     <label >Tags</label>
                     <input
                       type="text"
                       placeholder="Private, urgent, freelence, ..."
-                      class="form-control"
-                      value={jobData.tags}
+                      className="form-control"
                       name="tags"
-                      onChange={(e) => handleChange(e)}
+                      value={tagsChaine}
+                      onChange={handleTagsChaineChange}
                     />
                   </div>
                 </div>
-                <div class="col-lg-6">
-                  <div class="form-group">
+                <div className="col-lg-6">
+                  <div className="form-group">
                     <label >Experience requise</label>
                     <input
                       type="text"
                       placeholder="1-2ans"
-                      class="form-control"
+                      className="form-control"
                       value={jobData.experience}
                       name="experience"
+                      required
                       onChange={(e) => handleChange(e)}
                     />
                   </div>
                 </div>
-                <div class="col-lg-12">
-                  <div class="form-group">
+                <div className="col-lg-12">
+                  <div className="form-group">
                     <label >Description de l'emploi</label>
                     <textarea
                       id="your_message"
                       rows="3"
-                      class="form-control"
+                      className="form-control"
                       name="description"
+                      required
                       value={jobData.description}
                       onChange={(e) => handleChange(e)}
                     />
                   </div>
                 </div>
               </div>
-              <div class="text-left">
-                <button type="submit" class="btn create-ac-btn" onClick={handlePublish}>Envoyer</button>
-                <button className="btn create-ac-btn" onClick={cancelPost}>
-                  Annuler message
+              <div className="text-left">
+                <button type="submit" className="btn create-ac-btn" onClick={handlePublish}>Envoyer</button>
+                <button className="btn create-ac-btn mx-2" onClick={cancelPost}>
+                  Annuler
                 </button>
               </div>
             </div>

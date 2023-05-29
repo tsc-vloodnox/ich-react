@@ -177,8 +177,7 @@
   }
 
   #category {
-    padding-top: 100px;
-    padding-bottom: 100px;
+    padding: 50px 0;
 
     .col-lg-3:hover {
       box-shadow: 0px 0px 25px 0px rgba(172, 170, 170, 0.521);
@@ -326,12 +325,11 @@
   }
 
   #fav-jobs {
-    padding-top: 80px;
-    padding-bottom: 80px;
+    padding: 50px 0;
     position: relative;
   }
 
-  .counter-area {
+  .counter-ctn {
     background: linear-gradient(90deg, $color-2 0%, $color-3 63%);
     padding-top: 50px;
     color: #ffffff;
@@ -750,4 +748,10 @@
 
 .our_sponsors_img div:hover {
   background-color: #fff;
+}
+
+.job-box .favorite-icon {
+  position: absolute;
+  top: 15px;
+  right: 15px;
 }

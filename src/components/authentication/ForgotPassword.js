@@ -29,18 +29,18 @@ export default function ForgotPassword() {
 
   return (
     <div className="page-wrapper">
-      <div class="page-title">
-        <div class="d-table">
-          <div class="d-table-cell">
-            <div class="container">
-              <div class="page-title-text">
+      <div className="page-title">
+        <div className="d-table">
+          <div className="d-table-cell">
+            <div className="container">
+              <div className="page-title-text">
                 <h2 >Réinitialiser Mon Mot De Passe</h2>
                 <ul >
                   <li >
                     <a href="/">Home</a>
                   </li>
                   <li >
-                    <i class="icofont-simple-right"></i>
+                    <i className="icofont-simple-right"></i>
                   </li>
                   <li >ForgotPassword</li>
                 </ul>

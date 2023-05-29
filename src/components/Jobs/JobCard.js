@@ -1,70 +1,72 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import DeleteJob from "./DeleteJob";
 import LikeButton from "./LikeButton";
 
-const JobCard = ({ job }) => {
+const JobCard = ({ job, openModal }) => {
+    const [open, setOpen] = useState(false);
 
+    function openModal() {
+        setOpen(true);
+    }
     const { currentUser } = useAuth();
 
     return (
         <div className='col-lg-6'>
-            <div class="job-box card mt-4">
-                <div class="p-4">
-                    <div class="row align-items-center">
-                        <div class="col-md-2">
-                            <div class="text-center mb-4 mb-md-0">
+            <div className="job-box card mt-4">
+                <div className="p-4">
+                    <div className="row">
+                        <div className="col-md-2">
+                            <div className="text-center mb-4 mb-md-0">
                                 <a href="company-details.html">
-                                    <img src={job.jobPic} alt="Job-pic" class="img-fluid rounded-3" />
+                                    <img src={job.jobPic} alt="Job-pic" className="img-fluid rounded-3" />
                                 </a>
                             </div>
                         </div>
-
-                        <div class="col-md-5">
-                            <div class="mb-2 mb-md-0">
-                                <h5 class="fs-18 mb-1">
-                                    <a href="jobs/job-details" class="text-dark">
+                        <div className="col-lg-10">
+                            <div className="mt-3 mt-lg-0">
+                                <h5 className="fs-17 mb-1">
+                                    <a href="jobs/job-details" className="text-dark">
                                         {job.jobName}
                                     </a>
+                                    {" "}
+                                    <small className="text-muted fw-normal">
+                                        {job.experience} Exp.
+                                    </small>
                                 </h5>
-                                <p class="text-muted fs-14 mb-0">{job.company}</p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="d-flex mb-2">
-                                <div class="flex-shrink-0">
-                                    <i class="mdi mdi-map-marker text-primary me-1"></i>
+                                <ul class="list-inline mb-0">
+                                    <li class="list-inline-item">
+                                        <p class="text-muted fs-14 mb-0">{job.company} {","}</p>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <p class="text-muted fs-14 mb-0"><i class="mdi mdi-map-marker"></i> {job.location} {","}</p>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <p class="text-muted fs-14 mb-0"><i class="uil uil-wallet"></i> {job.salary}</p>
+                                    </li>
+                                </ul>
+                                <div className="mt-2">
+                                    <span className="badge bg-soft-success mt-1 mx-1">{job.categorys}</span>
+                                    <span className="badge bg-soft-info fs-13 mt-1 mx-1">{job.jobType}</span>
+                                    {job.tags.map((tag, index) => (
+                                        <span className="badge bg-soft-primary fs-13 mt-1 mx-1" key={index}>
+                                            {tag}
+                                        </span>
+                                    ))}
                                 </div>
-                                <p class="text-muted mb-0">{job.location}</p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div>
-                                <p class="text-muted mb-2">
-                                    <span class="text-primary">$</span>
-                                    {job.salary}
-                                </p>
                             </div>
                         </div>
                     </div>
-                    <div className="d-flex align-items-center justify-content-around">
-                        <span class="text-dark">Exp : {job.experience}</span>
-                        <span class="badge bg-soft-info fs-13 mt-1">{job.jobType}</span>
-                        <span class="badge bg-soft-info fs-13 mt-1">{job.tags}</span>
+                    <div class="favorite-icon">
+                        {currentUser && <LikeButton id={job.id} likes={job.likes} />}
                     </div>
-
                 </div>
-                <div class="p-3 bg-light">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div>
-                                <p class="text-muted mb-0">
-                                    <span class="text-dark">Notes : {job.description}</span>
-
-                                </p>
-                            </div>
+                <div className="p-3 bg-light">
+                    <div className="row">
+                        <div className="col-lg-12">
+                            <p className="text-muted text-dark mb-0 ltext">
+                                Notes : {job.description}
+                            </p>
                         </div>
                     </div>
 
@@ -76,11 +78,10 @@ const JobCard = ({ job }) => {
                     {
                         currentUser ? (
                             <>
-                                <LikeButton id={job.id} likes={job.likes} />
-                                <a href="#applyNow" class="btn border primary-link">
+                                <button className="btn border primary-link" onClick={openModal}>
                                     Postuler
-                                    <i class="mdi mdi-chevron-double-right"></i>
-                                </a>
+                                    <i className="mdi mdi-chevron-double-right"></i>
+                                </button>
                             </>
                         ) : (
                             <a href="/login" className="btn border">Se connecter pour postuler</a>

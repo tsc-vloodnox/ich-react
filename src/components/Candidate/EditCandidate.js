@@ -3,186 +3,146 @@ import React, { useState, useEffect } from "react";
 const EditCandidate = () => {
 
   return (
-    <form action="#">
+    <form >
       <div>
-        <h5 class="fs-17 fw-semibold mb-3 mb-0">Infos de base</h5>
-        <div class="text-center">
-          <div class="mb-4 profile-user">
-            <div class="p-0 rounded-circle profile-photo-edit">
-              <input
-                type="file"
-              // onChange={handleCandidatePicChange}
-              />
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-6">
-            <div class="mb-3">
-              <label class="form-label">Nom et prenom</label>
+        <h5 className="fs-17 fw-semibold mb-3 mb-0">Infos de base</h5>
+        <div className="row">
+
+          <div className="col-lg-6">
+            <div className="mb-3">
+              <label className="form-label">Nom et prenom</label>
               <input
                 type="text"
-                class="form-control"
-
+                className="form-control"
+                name='name'
               />
             </div>
           </div>
 
-          <div class="col-lg-6">
-            <div class="mb-3">
-              <label class="form-label">Age</label>
-              <input type="date" class="form-control"
-                value="" />
+          <div className="col-lg-6">
+            <div className="mb-3">
+              <label className="form-label">Profession actuel</label>
+              <input
+                type="text"
+                className="form-control"
+                name='currentOccupation'
+              />
             </div>
           </div>
 
-          <div class="col-lg-12">
-            <div class="mb-3 d-flex">
-              <span _ngcontent-hgl-c27="">Gender</span>
-              <input type="radio" name="gender" id="male" value="male" />
-              <label for="male">Male</label>
-              <input type="radio" name="gender" id="female" value="female" />
-              <label for="female">Female</label>
+          <div className="col-lg-6">
+            <div className="mb-3">
+              <label className="form-label">Age</label>
+              <input
+                type="date"
+                className="form-control"
+                name='age'
+              />
             </div>
           </div>
 
-          <div class="col-lg-6">
-            <div class="mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input type="text" class="form-control" id="email"
-                value="Jansh@gmail.com" />
+          <div className="col-lg-6">
+            <div className="mb-3">
+              <label className='form-label'>Gender</label>
+              <select className="form-select">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
             </div>
           </div>
 
-          <div class="col-lg-6">
-            <div class="mb-3">
-              <label class="form-label">Numero</label>
-              <input type="text" class="form-control"
-                value="+225 00 00 00 00 00" />
+          <div className="col-lg-6">
+            <div className="mb-3">
+              <label for="email" className="form-label">Email</label>
+              <input
+                className="form-control"
+                type="text"
+                name='email'
+              />
             </div>
           </div>
 
-          <div class="col-lg-6">
-            <div class="mb-3">
-              <label for="languages" class="form-label">Langages</label>
-              <input type="text" class="form-control" id="languages"
-                value="English, German, French" />
+          <div className="col-lg-6">
+            <div className="mb-3">
+              <label className="form-label">Numero</label>
+              <input
+                className="form-control"
+                type="text"
+                name='number'
+              />
             </div>
           </div>
 
-          <div class="col-lg-6">
-            <div class="mb-3">
-              <label class="form-label">Adresse</label>
-              <input type="text" class="form-control"
-                value="" />
+          <div className="col-lg-6">
+            <div className="mb-3">
+              <label className="form-label">Langages</label>
+              <input
+                className="form-control"
+                type="text"
+                name='languages'
+              />
             </div>
           </div>
 
-          <div class="col-lg-12">
-            <div class="mb-3">
-              <label class="form-label">Présentez-vous</label>
-              <textarea class="form-control"
-                rows="5" />
+          <div className="col-lg-6">
+            <div className="mb-3">
+              <label className="form-label">offredSalary</label>
+              <input
+                className="form-control"
+                type="text"
+                name='offredSalary'
+              />
+            </div>
+          </div>
+
+          <div className="col-lg-12">
+            <div className="mb-3">
+              <label className="form-label">Présentez-vous</label>
+              <textarea
+                className="form-control"
+                rows="5"
+                name='description'
+              />
+            </div>
+          </div>
+
+          <div className="col-lg-6">
+            <div className="mb-3">
+              <label className="form-label">Pic</label>
+              <input
+                type="file"
+                className="form-control"
+                name='candidatePic'
+              />
+            </div>
+          </div>
+          <div className="col-lg-6">
+            <div className="mb-3">
+              <label className="form-label">CV</label>
+              <input
+                type="file"
+                className="form-control"
+                name='candidateCV'
+                accept='.pdf'
+              />
             </div>
           </div>
         </div>
 
       </div>
 
-      <div class="mt-4">
-        <h5 class="fs-17 fw-semibold mb-3">Parcourt</h5>
-        <div class="row">
-
-          <div class="col-lg-6">
-            <div class="mb-3">
-              <label class="form-label">Diplôme</label>
-              <input type="text" class="form-control"
-                value="" />
-            </div>
-          </div>
-
-          <div class="col-lg-6">
-            <div class="mb-3">
-              <label class="form-label">Institut</label>
-              <input type="text" class="form-control"
-                value="" />
-            </div>
-          </div>
-
-          <div class="col-lg-6">
-            <div class="mb-3">
-              <label class="form-label">Année</label>
-              <input type="text" class="form-control"
-                value="" />
-            </div>
-          </div>
-
-          <div class="col-lg-6">
-            <div class="mb-3">
-              <label class="form-label">Commentaire</label>
-              <input type="text" class="form-control"
-                value="" />
-            </div>
-          </div>
-
-          <div class="col-lg-12">
-            <div class="mb-3">
-              <label class="form-label">Joindre CV</label>
-              <input class="form-control" type="file" id="attachmentscv" />
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-
-      <div class="mt-4">
-        <h5 class="fs-17 fw-semibold mb-3">Compétences </h5>
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="mb-3">
-              <label for="facebook" class="form-label">Titre</label>
-              <input type="text" class="form-control" id="facebook"
-                value="User Interface, Design Web, Design Responsive, Design Mobile, App Design, UI Design...." />
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-
-      <div class="mt-4">
-        <h5 class="fs-17 fw-semibold mb-3">Social Media</h5>
-        <div class="row">
-          <div class="col-lg-6">
-            <div class="mb-3">
-              <label for="facebook" class="form-label">Facebook</label>
-              <input type="text" class="form-control" id="facebook"
-                value="https://www.facebook.com/" />
-            </div>
-          </div>
-
-          <div class="col-lg-6">
-            <div class="mb-3">
-              <label for="twitter" class="form-label">Twitter</label>
-              <input type="text" class="form-control" id="twitter"
-                value="https://www.twitter.com/" />
-            </div>
-          </div>
-
-          <div class="col-lg-6">
-            <div class="mb-3">
-              <label for="linkedin" class="form-label">Linkedin</label>
-              <input type="text" class="form-control" id="linkedin"
-                value="https://www.linkedin.com/" />
-            </div>
-          </div>
-
-          <div class="col-lg-6">
-            <div class="mb-3">
-              <label for="whatsapp" class="form-label">Whatsapp</label>
-              <input type="text" class="form-control" id="whatsapp"
-                value="https://www.whatsapp.com/" />
+      <div className="mt-4">
+        <h5 className="fs-17 fw-semibold mb-3">Compétences </h5>
+        <div className="row">
+          <div className="col-lg-12">
+            <div className="mb-3">
+              <label for="facebook" className="form-label">Titre</label>
+              <input
+                className="form-control"
+                type="text"
+                name='skills'
+              />
             </div>
           </div>
 
@@ -190,9 +150,68 @@ const EditCandidate = () => {
 
       </div>
 
-      <div class="mt-4 text-end">
-        <a href="javascript:void(0)" class="btn btn-primary">Update</a>
+      <div className="mt-4 form-group">
+        <h5 className="fs-17 fw-semibold mb-3">Social Media</h5>
+        <div className="row">
+          <div className="col-lg-6">
+            <div className="mb-3">
+              <label for="facebook" className="form-label">Facebook</label>
+              <input
+                type="text"
+                className="form-control"
+                name='facebook'
+              />
+            </div>
+          </div>
+
+          <div className="col-lg-6">
+            <div className="mb-3">
+              <label for="twitter" className="form-label">Twitter</label>
+              <input
+                type="text"
+                className="form-control"
+                name='twitter'
+              />
+            </div>
+          </div>
+
+          <div className="col-lg-6">
+            <div className="mb-3">
+              <label for="linkedin" className="form-label">Linkedin</label>
+              <input
+                type="text"
+                className="form-control"
+                name='linkedin'
+              />
+            </div>
+          </div>
+
+          <div className="col-lg-6">
+            <div className="mb-3">
+              <label for="whatsapp" className="form-label">Whatsapp</label>
+              <input
+                type="text"
+                className="form-control"
+                name='whatsapp'
+              />
+            </div>
+          </div>
+        </div>
       </div>
+
+      <div className="mt-4 text-end">
+        <button type='submit' className="btn btn-primary">Envoyer</button>
+      </div>
+      {/* {progress === 0 ? null : (
+        <div className="progress">
+          <div
+            className="progress-bar progress-bar-striped mt-2"
+            style={{ width: `${progress}%` }}
+          >
+            {`uploading image ${progress}%`}
+          </div>
+        </div>
+      )} */}
     </form>
   )
 }

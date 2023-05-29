@@ -6,6 +6,11 @@ import JobCard from "./JobCard";
 
 const JobsList = () => {
     const { currentUser } = useAuth();
+    const [open, setOpen] = useState(false);
+
+    function closeModal() {
+        setOpen(false);
+    }
 
     const [jobs, setJobs] = useState([]);
     const [categorys, setCategorys] = useState([]);
@@ -42,7 +47,7 @@ const JobsList = () => {
     const [jobName, setJobName] = useState("");
     const [location, setLocation] = useState("");
     const [jobType, setJobType] = useState("");
-    const [categoryId, setCategoryId] = useState("");
+    const [categoryName, setCategoryName] = useState("");
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -51,9 +56,9 @@ const JobsList = () => {
             const jobNameMatch = job.jobName.toLowerCase().includes(jobName.toLowerCase());
             const locationMatch = job.location.toLowerCase().includes(location.toLowerCase());
             const jobTypeMatch = job.jobType === jobType;
-            const categoryIdMatch = job.categoryId === categoryId;
+            const categoryNameMatch = job.categoryName === categoryName;
 
-            return jobNameMatch && locationMatch && jobTypeMatch && categoryIdMatch;
+            return jobNameMatch && locationMatch && jobTypeMatch && categoryNameMatch;
         });
 
         setFilteredJobs(filteredJobsArray);
@@ -61,7 +66,7 @@ const JobsList = () => {
         setJobName("");
         setLocation("");
         setJobType("");
-        setCategoryId("");
+        setCategoryName("");
     };
 
     // filtreur secondaire
@@ -100,17 +105,17 @@ const JobsList = () => {
 
     return (
         <div className="page-wrapper">
-            <div class="page-title">
-                <div class="d-table">
-                    <div class="d-table-cell">
-                        <div class="container">
-                            <div class="page-title-text">
+            <div className="page-title">
+                <div className="d-table">
+                    <div className="d-table-cell">
+                        <div className="container">
+                            <div className="page-title-text">
                                 <h2 >Job List</h2>
                                 <ul >
                                     <li ><a href="/">Home</a></li>
-                                    <li ><i class="icofont-simple-right"></i></li>
+                                    <li ><i className="icofont-simple-right"></i></li>
                                     <li ><a href="/jobs">Job Categories</a></li>
-                                    <li ><i class="icofont-simple-right"></i></li>
+                                    <li ><i className="icofont-simple-right"></i></li>
                                     <li >Job List</li>
                                 </ul>
                             </div>
@@ -118,15 +123,15 @@ const JobsList = () => {
                     </div>
                 </div>
             </div>
-            <section class="section">
-                <div class="container">
-                    <div class="row justify-content-center">
+            <section className="section">
+                <div className="container">
+                    <div className="row justify-content-center">
                         <div className="col-lg-12">
                             <form onSubmit={handleSubmit}>
-                                <div class="row g-2">
-                                    <div class="col-lg-3 col-md-6">
-                                        <div class="filler-job-form">
-                                            <i class="uil uil-briefcase-alt"></i>
+                                <div className="row g-2">
+                                    <div className="col-lg-3 col-md-6">
+                                        <div className="filler-job-form">
+                                            <i className="uil uil-briefcase-alt"></i>
                                             <input
                                                 type="search"
                                                 className="form-control filter-job-input-box"
@@ -137,11 +142,11 @@ const JobsList = () => {
                                             />
                                         </div>
                                     </div>
-                                    <div class="col-lg-3 col-md-6">
-                                        <div class="filler-job-form">
-                                            <i class="uil uil-briefcase-alt"></i>
+                                    <div className="col-lg-3 col-md-6">
+                                        <div className="filler-job-form">
+                                            <i className="uil uil-briefcase-alt"></i>
                                             <select
-                                                class="form-select 
+                                                className="form-select 
                                             form-control"
                                                 value={location}
                                                 onChange={(event) => setLocation(event.target.value)}
@@ -160,9 +165,9 @@ const JobsList = () => {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-lg-2 col-md-6">
-                                        <div class="filler-job-form">
-                                            <i class="uil uil-clipboard-notes"></i>
+                                    <div className="col-lg-2 col-md-6">
+                                        <div className="filler-job-form">
+                                            <i className="uil uil-clipboard-notes"></i>
                                             <select
                                                 className="form-select"
                                                 name="jobType"
@@ -176,14 +181,14 @@ const JobsList = () => {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-lg-2 col-md-6">
-                                        <div class="filler-job-form">
-                                            <i class="uil uil-briefcase-alt"></i>
+                                    <div className="col-lg-2 col-md-6">
+                                        <div className="filler-job-form">
+                                            <i className="uil uil-briefcase-alt"></i>
                                             <select
                                                 className="form-select"
                                                 name="jobCategory"
-                                                value={categoryId}
-                                                onChange={(event) => setCategoryId(event.target.value)}
+                                                value={categoryName}
+                                                onChange={(event) => setCategoryName(event.target.value)}
                                             >
                                                 <option value="">Catégorie</option>
                                                 {categorys.map((category) => (
@@ -194,9 +199,9 @@ const JobsList = () => {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-lg-2 col-md-6">
-                                        <button class="btn btn-primary w-100" type="submit">
-                                            <i class="uil uil-filter"></i> Filtrer
+                                    <div className="col-lg-2 col-md-6">
+                                        <button className="btn btn-primary w-100" type="submit">
+                                            <i className="uil uil-filter"></i> Filtrer
                                         </button>
                                     </div>
                                 </div>
@@ -205,9 +210,9 @@ const JobsList = () => {
                         </div>
                     </div>
 
-                    <div class="mt-3">
-                        <div class="select-by-order">
-                            <select class="form-select" value={selectedOrder} onChange={handleOrderChange}>
+                    <div className="mt-3">
+                        <div className="select-by-order">
+                            <select className="form-select" value={selectedOrder} onChange={handleOrderChange}>
                                 <option value="">Ordre</option>
                                 <option value="new">Newest</option>
                                 <option value="old">Oldest</option>
@@ -217,19 +222,56 @@ const JobsList = () => {
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div className="row">
                         {filteredJobs.length > 0 ?
                             filteredJobs.map((job) => (
-                                <JobCard job={job} key={job.id} user={currentUser} />
+                                <JobCard job={job} key={job.id} catId={job.categoryID} user={currentUser} />
                             )) : (
                                 orderedJobs.map((job) => (
-                                    <JobCard job={job} key={job.id} user={currentUser} />
+                                    <JobCard job={job} key={job.id} openModal={open} user={currentUser} />
                                 ))
                             )
                         }
                     </div>
                 </div>
             </section>
+            <div className={open ? "modal show" : "modal"}>
+                <div className="modal-dialog modal-dialog-centered">
+                    <div className="modal-content">
+                        <div className="modal-body p-5">
+                            <div className="text-center mb-4">
+                                <h5 className="modal-title">Apply For This Job</h5>
+                            </div>
+                            <div className="position-absolute end-0 top-0 p-3">
+                                <button
+                                    type="button"
+                                    className="close"
+                                    onClick={closeModal}
+                                >
+                                    &times;
+                                </button>
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Name</label>
+                                <input type="text" className="form-control" placeholder="Enter your name" />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Email Address</label>
+                                <input type="email" className="form-control" placeholder="Enter your email" />
+                            </div>
+                            <div className="mb-3">
+                                <label for="messageControlTextarea" className="form-label">Message</label>
+                                <textarea className="form-control" rows="4" placeholder="Enter your message" />
+                            </div>
+                            <div className="mb-4">
+                                <label className="form-label" >Resume Upload</label>
+                                <input type="file" className="form-control" />
+                            </div>
+                            <button type="submit" className="btn btn-primary w-100">Send Application</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

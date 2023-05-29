@@ -336,7 +336,7 @@
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
-    .post-job-area {
+    .post-job {
         padding-bottom: 140px;
     }
 }
@@ -348,7 +348,7 @@
     }
 }
 
-.post-job-area {
+.post-job {
     padding-bottom: 200px;
 }
 
@@ -437,14 +437,14 @@
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
-    .post-job-item .job-type-area span {
+    .post-job-item .job-type span {
         margin-bottom: 12px;
         font-size: 14px;
     }
 }
 
 
-.post-job-item .job-type-area span {
+.post-job-item .job-type span {
     display: block;
     margin-bottom: 20px;
     color: #7f7e7e;
